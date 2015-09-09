@@ -4,7 +4,7 @@
   "description": "A compiler that allows you to pull async templates & contexts from the web (or locally) and compile the output to a destination",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -14,5 +14,16 @@
   "bugs": {
     "url": "https://github.com/take2mfg/async-compiler/issues"
   },
-  "homepage": "https://github.com/take2mfg/async-compiler"
+  "homepage": "https://github.com/take2mfg/async-compiler",
+  "devDependencies": {
+    "babel": "^5.8.23",
+    "chai": "^3.2.0",
+    "chai-as-promised": "^5.1.0",
+    "mocha": "^2.3.2"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.1.50",
+    "lodash": "^3.10.1",
+    "rsvp": "^3.1.0"
+  }
 }

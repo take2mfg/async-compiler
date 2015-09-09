@@ -1,0 +1,3 @@
+--bail
+--recursive
+--compilers js:babel/register
