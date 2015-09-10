@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "aws-sdk": "^2.1.50",
+    "js-yaml": "^3.4.2",
     "lodash": "^3.10.1",
     "rsvp": "^3.1.0"
   }

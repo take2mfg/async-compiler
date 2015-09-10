@@ -26,13 +26,13 @@ pages:
         slug: 'small-signs'
         as: 'featured-signs'
 
-      stripe:
-        call: 'payments.list'
-        as: 'payments'
+      # stripe:
+      #   call: 'payments.list'
+      #   as: 'payments'
 
       url:
         path: 'http://api.github.com/pulls?user=take2'
-        as: 'pull-requests’
+        as: 'pull-requests'
 
   freeway-signs:
     needs:      
