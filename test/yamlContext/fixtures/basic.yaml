@@ -37,10 +37,19 @@ pages:
   freeway-signs:
     needs:      
       # default behavior of categories
-      take2:
-        type: 'group'
-        slug: 'freeway-signs'
-        as: 'freeway-signs'
+      # this happens under the covers for default category pages
+      #
+      # take2:
+      #   type: 'group'
+      #   slug: 'fw-signs'
+      #   as: 'category-items'
+      #   
+      # you can override this behavior (not recommended)
+      # 
+      # take2:
+      #   type: 'group'
+      #   slug: 'some-other-group'
+      #   as: 'category-items'
 
       # extra context I want to use in this page
       take2:
