@@ -52,6 +52,19 @@ describe('YAML context', () => {
           expect(context['twitter-info']).to.be.equal('Info that twitter crawler grabs');
 
           expect(context.categories).to.have.length(1);
+          expect(context.categories['freeway-signs']).to.exist;
+        });
+    });
+
+    it('gets context needed for large-banners category page, even with no site defined for it', () => {
+      return compiler.getYAMLContextFor('large-banners')
+        .then(context => {
+          expect(context.title).to.be.equal('FastBannerSigns.com');
+          expect(context['fb-info']).to.be.equal('Info to show to facebook crawler');
+          expect(context['twitter-info']).to.be.equal('Info that twitter crawler grabs');
+
+          expect(context.categories).to.have.length(1);
+          expect(context.categories['large-banners']).to.exist;
         });
     });
 

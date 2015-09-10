@@ -24,6 +24,8 @@ pages:
       monday-featured-template:
         url: '/templates/24'
 
+  # this is redundant, by default all categories have a site defined this way
+  # category.hbs is used in this case to display the markup
   freeway-signs:
     needs:
       categories: [
