@@ -1,8 +1,13 @@
 import { expect } from 'chai';
 import fs from 'fs';
+import chai from 'chai';
+import chaiAsPromised from 'chai-as-promised';
+
 
 import { getSpyableCompiler } from '../testUtils';
 
+
+chai.use(chaiAsPromised);
 
 const baseDir = './test/yamlContext/fixtures';
 
@@ -27,6 +32,7 @@ describe('YAML context', () => {
       compiler = getCompilerWithFixture('basic.yaml');
     });
 
+
     it('gets context needed for home page', () => {
       return compiler.getYAMLContextFor('home')
         .then(context => {
@@ -34,15 +40,13 @@ describe('YAML context', () => {
           expect(context['fb-info']).to.be.equal('Info to show to facebook crawler');
           expect(context['twitter-info']).to.be.equal('Info that twitter crawler grabs');
 
-          expect(context.categories).to.have.length(2);
-
-          expect(context['monday-featured-product']).to.exist;
-          expect(context['monday-featured-product.face']).to.exist;
-          expect(context['monday-featured-product.face.design']).to.exist;
-
-          expect(context['monday-featured-template']).to.exist;
+          expect(context['featured-banners']).to.exist;
+          expect(context['featured-signs']).to.exist;
+          expect(context['featured-payments']).to.exist;
+          expect(context['pull-requests']).to.exist;
         });
     });
+
 
     it('gets context needed for freeway signs landing page', () => {
       return compiler.getYAMLContextFor('freeway-signs')
@@ -51,10 +55,12 @@ describe('YAML context', () => {
           expect(context['fb-info']).to.be.equal('Info to show to facebook crawler');
           expect(context['twitter-info']).to.be.equal('Info that twitter crawler grabs');
 
-          expect(context.categories).to.have.length(1);
-          expect(context.categories['freeway-signs']).to.exist;
+          expect(context['freeway-signs']).to.exist;          
+          expect(context['my-featured-product']).to.exist;
+          expect(context['my-featured-pair']).to.exist;
         });
     });
+
 
     it('gets context needed for large-banners category page, even with no site defined for it', () => {
       return compiler.getYAMLContextFor('large-banners')
@@ -63,19 +69,32 @@ describe('YAML context', () => {
           expect(context['fb-info']).to.be.equal('Info to show to facebook crawler');
           expect(context['twitter-info']).to.be.equal('Info that twitter crawler grabs');
 
-          expect(context.categories).to.have.length(1);
-          expect(context.categories['large-banners']).to.exist;
+          expect(context['large-banners']).to.exist;
         });
     });
 
-    it('gets only page info for not declared landing page', () => {
+
+    it('reject for not declared page', () => {
       return compiler.getYAMLContextFor('not-declared-in-yaml')
+        .should.be.rejected;
+    });
+
+
+    it('reject for not being called nested under its parent', () => {
+      return compiler.getYAMLContextFor('summer-party-banners')
+        .should.be.rejected;
+    });
+
+
+    it('gets nested category context', () => {
+      return compiler.getYAMLContextFor('large-banners/summer-party-banners')
         .then(context => {
           expect(context.title).to.be.equal('FastBannerSigns.com');
           expect(context['fb-info']).to.be.equal('Info to show to facebook crawler');
           expect(context['twitter-info']).to.be.equal('Info that twitter crawler grabs');
-          
-          expect(context.categories).to.not.exist;
+
+          expect(context['summer-party-banners']).to.exist;
+          expect(context['summer-party-banners']['display-name']).to.be.equal('Awesome party banners!!!');
         });
     });
     
