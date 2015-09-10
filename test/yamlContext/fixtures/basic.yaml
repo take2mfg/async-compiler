@@ -70,7 +70,7 @@ pages:
 # - get default sites using category.hbs
 categories:
   large-banners:
-    display-name: 'Large banners'  # by default is template group name
+    display-name: 'Large banners!!'  # by default is template group name
     slug: 'large-banners'  # by default is the same of template group, but can be customized
     template-group-slug: 'banners-lg'
     children:
@@ -83,3 +83,4 @@ categories:
 
   freeway-signs:
     template-group-slug: 'fw-signs'
+

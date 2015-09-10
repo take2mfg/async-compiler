@@ -55,7 +55,11 @@ describe('YAML context', () => {
           expect(context['fb-info']).to.be.equal('Info to show to facebook crawler');
           expect(context['twitter-info']).to.be.equal('Info that twitter crawler grabs');
 
-          expect(context['freeway-signs']).to.exist;          
+          // here are linked freeway-signs items by default
+          expect(context['category.items']).to.exist;
+          // match take2 group name
+          expect(context['category.display-name']).to.be.equal('The freeway signs');
+          
           expect(context['my-featured-product']).to.exist;
           expect(context['my-featured-pair']).to.exist;
         });
@@ -69,7 +73,8 @@ describe('YAML context', () => {
           expect(context['fb-info']).to.be.equal('Info to show to facebook crawler');
           expect(context['twitter-info']).to.be.equal('Info that twitter crawler grabs');
 
-          expect(context['large-banners']).to.exist;
+          expect(context['category.items']).to.exist;
+          expect(context['category.display-name']).to.be.equal('Large banners!!');
         });
     });
 
@@ -93,8 +98,8 @@ describe('YAML context', () => {
           expect(context['fb-info']).to.be.equal('Info to show to facebook crawler');
           expect(context['twitter-info']).to.be.equal('Info that twitter crawler grabs');
 
-          expect(context['summer-party-banners']).to.exist;
-          expect(context['summer-party-banners']['display-name']).to.be.equal('Awesome party banners!!!');
+          expect(context['category.items']).to.exist;
+          expect(context['category.display-name']).to.be.equal('Awesome party banners!!!');
         });
     });
     
