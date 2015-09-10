@@ -18,7 +18,7 @@ export function getSpyableCompiler() {
 
     compiler.FETCHES_FROM_S3.push(compiler.LAST_FETCH_FROM_S3);
 
-    return RSVP.resolve({});
+    return RSVP.resolve(compiler.NEXT_S3_RESPONSE || {});
   };
 
   return compiler;
