@@ -32,7 +32,11 @@ pages:
         'freeway-signs'
       ]
 
-# categories definition
+# Categories are a very flexible way to:
+# - whitelist which groups are displayed on your store
+# - customize `display-name` and `slug` of your groups (if you want to override the defaults)
+# - define parent-children relationships between groups
+# - get default sites using category.hbs
 categories:
   large-banners:
     display-name: 'Large banners'  # by default is template group name
