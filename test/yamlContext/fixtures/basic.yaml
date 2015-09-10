@@ -1,0 +1,51 @@
+
+# global site info
+site:
+  title: 'FastBannerSigns.com'
+  # users can put arbitrary data here
+  fb-info: 'Info to show to facebook crawler'
+  twitter-info: 'Info that twitter crawler grabs'
+
+
+# pages names match hbs files
+pages:
+  home:
+    needs:  # represent api fetches
+      # categories is special, they map to the categories base key in this yaml file
+      categories: [
+        'large-banners',
+        'featured-products'
+      ]
+
+      # manually request other data, url will be fetched
+      monday-featured-product:
+        url: '/products/1?include=face,face.design'
+
+      monday-featured-template:
+        url: '/templates/24'
+
+  freeway-signs:
+    needs:
+      categories: [
+        'freeway-signs'
+      ]
+
+# categories definition
+categories:
+  large-banners:
+    display-name: 'Large banners'  # by default is template group name
+    slug: 'large-banners'  # by default is the same of template group, but can be customized
+    template-group-slug: 'banners-lg'
+    children: [
+      'summer-party-banners',
+      'kids-party-banners'
+    ]
+
+  summer-party-banners: 
+    template-group-slug: 'summer-party-banners'
+
+  kids-party-banners: 
+    template-group-slug: 'kids-party-banners'
+
+  freeway-signs:
+    template-group-slug: 'fw-signs'
