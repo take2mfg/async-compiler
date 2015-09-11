@@ -1,3 +1,4 @@
 --bail
 --recursive
+--require test/support/node
 --compilers js:babel/register

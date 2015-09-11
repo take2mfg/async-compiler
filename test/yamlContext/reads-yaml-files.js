@@ -1,13 +1,8 @@
 import { expect } from 'chai';
 import fs from 'fs';
-import chai from 'chai';
-import chaiAsPromised from 'chai-as-promised';
-
 
 import { getSpyableCompiler } from '../testUtils';
 
-
-chai.use(chaiAsPromised);
 
 const baseDir = './test/yamlContext/fixtures';
 
@@ -24,7 +19,7 @@ function getCompilerWithFixture(fixtureName) {
 }
 
 
-describe.only('YAML context', () => {
+describe.skip('YAML context', () => {
 
   describe('basic yaml file', () => {
     let compiler;
