@@ -33,7 +33,8 @@ describe('URLAdapter', () => {
     };
 
     let options = {
-      as: 'my-fetch',
+      _key: 'my-fetch',
+      adapter: 'url',
       path: urlHost + urlPath
     };
 

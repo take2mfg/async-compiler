@@ -8,11 +8,11 @@ describe('BaseAdapter', () => {
   });
 
 
-  it('throws if "as" is not defined', () => {
+  it('throws if "adapter" is not defined', () => {
     let options = {};
     
     return adapter.fetch(options)
-      .should.be.rejectedWith(/'as'/);
+      .should.be.rejectedWith(/'adapter'/);
   });
 
 });

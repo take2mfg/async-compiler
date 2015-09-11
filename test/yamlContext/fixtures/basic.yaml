@@ -16,15 +16,15 @@ pages:
       # declared here. They return a promise that resolves in the data needed.
       # This resolved data is merged into the context to be used by the corresponding
       # hbs template file
-      take2:
+      'featured-banners':
         type: 'group'
         slug: 'large-banners'
-        as: 'featured-banners'
+        adapter: take2
 
-      # take2:
-      #   type: 'group'
-      #   slug: 'small-signs'
-      #   as: 'featured-signs'
+      'featured-signs':
+        type: 'group'
+        slug: 'small-signs'
+        adapter: take2
 
       # stripe:
       #   call: 'payments.list'
