@@ -26,13 +26,14 @@ pages:
         slug: 'small-signs'
         adapter: take2
 
-      # stripe:
-      #   call: 'payments.list'
-      #   as: 'payments'
+      'pull-requests':
+        path: 'http://api.github.example.com/pulls?user=myuser'
+        adapter: url
 
-      # url:
-      #   path: 'http://api.github.com/pulls?user=take2'
-      #   as: 'pull-requests'
+      # you can potentially add your own adapters
+      # 'featured-payments':
+      #   call: 'payments.list'
+      #   adapter: stripe
 
   freeway-signs:
     needs:      
@@ -52,15 +53,17 @@ pages:
       #   as: 'category-items'
 
       # extra context I want to use in this page
-      take2:
-        type: 'product'
-        id: 13
-        as: 'my-featured-product'
 
-      take2:
-        type: 'productTemplatePair'
-        id: '12-23-14'
-        as: 'my-featured-pair'
+      # TODO: re enable this
+      # 'my-featured-product':
+      #   type: 'product'
+      #   id: 13
+      #   adapter: take2
+
+      # 'my-featured-pair':
+      #   type: 'productTemplatePair'
+      #   id: '12-23-14'
+      #   adapter: take2
 
 
 # Categories are a very flexible way to:
@@ -82,5 +85,7 @@ categories:
         template-group-slug: 'kids-party-banners'
 
   freeway-signs:
-    template-group-slug: 'fw-signs'
+    # TODO: allow also slugs, not ids only
+    # template-group-slug: 'fw-signs'
+    template-group-slug: 1
 
