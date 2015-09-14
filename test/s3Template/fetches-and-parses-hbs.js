@@ -1,15 +1,11 @@
 import { expect } from 'chai';
 import fs from 'fs';
-// import nock from 'nock';
 import cheerio from 'cheerio';
 
 import { getSpyableCompiler } from '../testUtils';
-// import { take2ApiHost, take2PublicKey } from '../../lib/async-compiler/yamlContext/adapters/take2-adapter';
-
 
 
 const baseDir = './test/s3Template/fixtures';
-
 
 
 function getCompilerWithFixture(fixtureName) {
