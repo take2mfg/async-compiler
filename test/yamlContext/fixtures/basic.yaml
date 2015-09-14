@@ -55,15 +55,16 @@ pages:
       # extra context I want to use in this page
 
       # TODO: re enable this
-      # 'my-featured-product':
-      #   type: 'product'
-      #   id: 13
-      #   adapter: take2
+      'my-featured-product':
+        type: 'products'
+        id: 13
+        adapter: take2
 
-      # 'my-featured-pair':
-      #   type: 'productTemplatePair'
-      #   id: '12-23-14'
-      #   adapter: take2
+      'my-featured-template-with-includes':
+        type: 'templates'
+        id: 14
+        include: 'faces,faces.designs'
+        adapter: take2
 
 
 # Categories are a very flexible way to:

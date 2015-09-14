@@ -3,10 +3,11 @@ import fs from 'fs';
 import nock from 'nock';
 
 import { getSpyableCompiler } from '../testUtils';
+import { take2ApiHost, take2PublicKey } from '../../lib/async-compiler/yamlContext/adapters/take2-adapter';
+
 
 
 const baseDir = './test/yamlContext/fixtures';
-const take2ApiHost = process.env.TAKE2_API_HOST || 'http://take2-dev.herokuapp.com/api/v1';
 
 
 
@@ -32,15 +33,12 @@ describe('YAML context', () => {
 
 
     it('gets context needed for home page', () => {
-      // I need to be able to:
-      // mock adapters and ensure they are being called
-      
-
       const featuredBannersResponse = {
         items: ['some', 'items', 'here']
       };
       nock(take2ApiHost)
         .get('/productTemplatePairs?filter%5BtemplateGroup%5D=large-banners&include=template%2Cproduct%2Cface')
+        .matchHeader('authorization', `bearer ${take2PublicKey}`)
         .reply(200, featuredBannersResponse);
 
       const featuredSignsResponse = {
@@ -48,6 +46,7 @@ describe('YAML context', () => {
       };
       nock(take2ApiHost)
         .get('/productTemplatePairs?filter%5BtemplateGroup%5D=small-signs&include=template%2Cproduct%2Cface')
+        .matchHeader('authorization', `bearer ${take2PublicKey}`)
         .reply(200, featuredSignsResponse);
 
       const githubResponse = {
@@ -85,7 +84,20 @@ describe('YAML context', () => {
       const productTemplatePairsResponse = {"freeway-signs":{"path":"http://localhost:5000/api/v1/productTemplatePairs","response":{"data":[{"type":"productTemplatePairs","id":"null-1-null","relationships":{"template":{"data":{"type":"templates","id":"1"}}}}],"included":[{"type":"templates","id":1,"attributes":{"account":1,"ownerUser":null,"name":"My temp","description":null}}]}}};
       nock(take2ApiHost)
         .get('/productTemplatePairs?filter%5BtemplateGroup%5D=1&include=template%2Cproduct%2Cface')
+        .matchHeader('authorization', `bearer ${take2PublicKey}`)
         .reply(200, productTemplatePairsResponse);
+
+      const productResponse = { some: 'response', id: 13 };
+      nock(take2ApiHost)
+        .get('/products/13')
+        .matchHeader('authorization', `bearer ${take2PublicKey}`)
+        .reply(200, productResponse);
+
+      const templateResponse = { some: 'template response', id: 14 };
+      nock(take2ApiHost)
+        .get('/templates/14?include=faces%2Cfaces.designs')
+        .matchHeader('authorization', `bearer ${take2PublicKey}`)
+        .reply(200, templateResponse);
 
       return compiler.yamlContext.getYAMLContextFor('freeway-signs')
         .then(context => {
@@ -96,14 +108,19 @@ describe('YAML context', () => {
           expect(context.category.response).to.deep.equal(productTemplatePairsResponse);
           // TODO: match take2 group name
           // expect(context.category['display-name']).to.be.equal('The freeway signs');
-          
-          // expect(context['my-featured-product']).to.exist;
-          // expect(context['my-featured-pair']).to.exist;
+
+          expect(context['my-featured-product'].response).to.deep.equal(productResponse);
+          expect(context['my-featured-template-with-includes']).to.exist;
         });
     });
 
 
-    it.skip('gets context needed for large-banners category page, even with no site defined for it', () => {
+    it('gets context needed for large-banners category page, even with no site defined for it', () => {
+      const productTemplatePairsResponse = {"freeway-signs":{"path":"http://localhost:5000/api/v1/productTemplatePairs","response":{"data":[{"type":"productTemplatePairs","id":"null-1-null","relationships":{"template":{"data":{"type":"templates","id":"1"}}}}],"included":[{"type":"templates","id":1,"attributes":{"account":1,"ownerUser":null,"name":"My temp","description":null}}]}}};
+      nock(take2ApiHost)
+        .get('/productTemplatePairs?filter%5BtemplateGroup%5D=banners-lg&include=template%2Cproduct%2Cface')
+        .matchHeader('authorization', `bearer ${take2PublicKey}`)
+        .reply(200, productTemplatePairsResponse);
 
       return compiler.yamlContext.getYAMLContextFor('large-banners')
         .then(context => {
@@ -111,33 +128,38 @@ describe('YAML context', () => {
           expect(context['fb-info']).to.be.equal('Info to show to facebook crawler');
           expect(context['twitter-info']).to.be.equal('Info that twitter crawler grabs');
 
-          expect(context['category.items']).to.exist;
-          expect(context['category.display-name']).to.be.equal('Large banners!!');
+          expect(context.category.response).to.deep.equal(productTemplatePairsResponse);
         });
     });
 
 
-    it.skip('reject for not declared page', () => {
+    it('reject for not declared page', () => {
       return compiler.yamlContext.getYAMLContextFor('not-declared-in-yaml')
         .should.be.rejected;
     });
 
 
-    it.skip('reject for not being called nested under its parent', () => {
+    it('reject for not being called nested under its parent', () => {
       return compiler.yamlContext.getYAMLContextFor('summer-party-banners')
         .should.be.rejected;
     });
 
 
-    it.skip('gets nested category context', () => {
+    it('gets nested category context', () => {
+      const productTemplatePairsResponse = {"freeway-signs":{"path":"http://localhost:5000/api/v1/productTemplatePairs","response":{"data":[{"type":"productTemplatePairs","id":"null-1-null","relationships":{"template":{"data":{"type":"templates","id":"1"}}}}],"included":[{"type":"templates","id":1,"attributes":{"account":1,"ownerUser":null,"name":"My temp","description":null}}]}}};
+      nock(take2ApiHost)
+        .get('/productTemplatePairs?filter%5BtemplateGroup%5D=summer-party-banners&include=template%2Cproduct%2Cface')
+        .matchHeader('authorization', `bearer ${take2PublicKey}`)
+        .reply(200, productTemplatePairsResponse);
+
       return compiler.yamlContext.getYAMLContextFor('large-banners/summer-party-banners')
         .then(context => {
           expect(context.title).to.be.equal('FastBannerSigns.com');
           expect(context['fb-info']).to.be.equal('Info to show to facebook crawler');
           expect(context['twitter-info']).to.be.equal('Info that twitter crawler grabs');
 
-          expect(context['category.items']).to.exist;
-          expect(context['category.display-name']).to.be.equal('Awesome party banners!!!');
+          expect(context.category.response).to.deep.equal(productTemplatePairsResponse);
+          expect(context.category['display-name']).to.be.equal('Awesome party banners!!!');
         });
     });
     
