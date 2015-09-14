@@ -20,7 +20,7 @@ function getCompilerWithFixture(fixtureName) {
 }
 
 
-describe.only('S3 template', () => {
+describe('S3Template', () => {
 
   it('fetches home, compiles it and adds the right context', () => {
     let compiler = getCompilerWithFixture('base.hbs');
