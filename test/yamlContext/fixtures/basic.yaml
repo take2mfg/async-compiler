@@ -16,23 +16,24 @@ pages:
       # declared here. They return a promise that resolves in the data needed.
       # This resolved data is merged into the context to be used by the corresponding
       # hbs template file
-      take2:
+      'featured-banners':
         type: 'group'
         slug: 'large-banners'
-        as: 'featured-banners'
+        adapter: take2
 
-      take2:
+      'featured-signs':
         type: 'group'
         slug: 'small-signs'
-        as: 'featured-signs'
+        adapter: take2
 
-      stripe:
-        call: 'payments.list'
-        as: 'payments'
+      'pull-requests':
+        path: 'http://api.github.example.com/pulls?user=myuser'
+        adapter: url
 
-      url:
-        path: 'http://api.github.com/pulls?user=take2'
-        as: 'pull-requests’
+      # you can potentially add your own adapters
+      # 'featured-payments':
+      #   call: 'payments.list'
+      #   adapter: stripe
 
   freeway-signs:
     needs:      
@@ -52,15 +53,18 @@ pages:
       #   as: 'category-items'
 
       # extra context I want to use in this page
-      take2:
-        type: 'product'
-        id: 13
-        as: 'my-featured-product'
 
-      take2:
-        type: 'productTemplatePair'
-        id: '12-23-14'
-        as: 'my-featured-pair'
+      # TODO: re enable this
+      'my-featured-product':
+        type: 'products'
+        id: 13
+        adapter: take2
+
+      'my-featured-template-with-includes':
+        type: 'templates'
+        id: 14
+        include: 'faces,faces.designs'
+        adapter: take2
 
 
 # Categories are a very flexible way to:
@@ -82,5 +86,7 @@ categories:
         template-group-slug: 'kids-party-banners'
 
   freeway-signs:
-    template-group-slug: 'fw-signs'
+    # TODO: allow also slugs, not ids only
+    # template-group-slug: 'fw-signs'
+    template-group-slug: 1
 
