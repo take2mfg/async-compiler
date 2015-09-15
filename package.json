@@ -2,7 +2,7 @@
   "name": "async-compiler",
   "version": "0.0.1",
   "description": "A compiler that allows you to pull async templates & contexts from the web (or locally) and compile the output to a destination",
-  "main": "index.js",
+  "main": "lib/async-compiler.js",
   "scripts": {
     "test": "mocha"
   },
