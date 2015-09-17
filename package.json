@@ -2,9 +2,10 @@
   "name": "async-compiler",
   "version": "0.0.1",
   "description": "A compiler that allows you to pull async templates & contexts from the web (or locally) and compile the output to a destination",
-  "main": "lib/async-compiler.js",
+  "main": "dist/async-compiler.js",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "build": "rm -rf dist && broccoli build dist"
   },
   "repository": {
     "type": "git",
@@ -17,6 +18,8 @@
   "homepage": "https://github.com/take2mfg/async-compiler",
   "devDependencies": {
     "babel": "^5.8.23",
+    "broccoli": "^0.16.8",
+    "broccoli-babel-transpiler": "^5.4.5",
     "chai": "^3.2.0",
     "chai-as-promised": "^5.1.0",
     "cheerio": "^0.19.0",
