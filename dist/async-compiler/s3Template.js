@@ -3,6 +3,8 @@
 Object.defineProperty(exports, '__esModule', {
   value: true
 });
+var _bind = Function.prototype.bind;
+var _slice = Array.prototype.slice;
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
@@ -64,8 +66,23 @@ var S3Template = (function () {
           body = body.toString('utf8');
         }
 
-        return _handlebars2['default'].compile(body);
+        return S3Template.compile(body);
       });
+    }
+  }], [{
+    key: 'compile',
+    value: function compile() {
+      return _handlebars2['default'].compile.apply(_handlebars2['default'], arguments);
+    }
+  }, {
+    key: 'registerHelper',
+    value: function registerHelper() {
+      _handlebars2['default'].registerHelper.apply(_handlebars2['default'], arguments);
+    }
+  }, {
+    key: 'safeString',
+    value: function safeString() {
+      return new (_bind.apply(_handlebars2['default'].SafeString, [null].concat(_slice.call(arguments))))();
     }
   }]);
 
