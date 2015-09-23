@@ -62,6 +62,20 @@ describe('YAML context', () => {
             title: 'FastBannerSigns.com',
             'fb-info': 'Info to show to facebook crawler',
             'twitter-info': 'Info that twitter crawler grabs',
+
+            'categories': [
+              {
+                'name': 'large-banners',
+                'children': [
+                  'Awesome party banners!!!',
+                  'kids-party-banners'
+                ]
+              },
+              {
+                'name': 'freeway-signs',
+                'children': []
+              }
+            ],
             
             'featured-banners': {
               path: `${take2ApiHost}/productTemplatePairs`,
