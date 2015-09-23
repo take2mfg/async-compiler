@@ -26,6 +26,10 @@ var _rsvp = require('rsvp');
 
 var _rsvp2 = _interopRequireDefault(_rsvp);
 
+var _fs = require('fs');
+
+var _fs2 = _interopRequireDefault(_fs);
+
 var _yamlContextAdapters = require('./yamlContext/adapters');
 
 var _yamlContextAdapters2 = _interopRequireDefault(_yamlContextAdapters);
@@ -41,6 +45,7 @@ var YAMLContext = (function () {
 
     this._compiler = options.compiler;
     this.adapters = options.adapters || _yamlContextAdapters2['default'].setupDefaultAdapters({ request: options.request });
+    this.DEV_YAML_FILE = options.DEV_YAML_FILE;
   }
 
   _createClass(YAMLContext, [{
@@ -48,9 +53,19 @@ var YAMLContext = (function () {
     value: function getYAMLContextFor(pageSlug) {
       var _this = this;
 
-      return this._compiler.fetchFromS3('app.yaml').then(function (data) {
+      var yamlFilePromise = undefined;
+
+      if (this.DEV_YAML_FILE) {
+        yamlFilePromise = _rsvp2['default'].resolve(_fs2['default'].readFileSync(this.DEV_YAML_FILE, 'utf8'));
+      } else {
+        yamlFilePromise = this._compiler.fetchFromS3('app.yaml').then(function (data) {
+          return data.Body;
+        });
+      }
+
+      return yamlFilePromise.then(function (yamlString) {
         // TODO: handle case of YAMLException
-        var pageSchema = _jsYaml2['default'].load(data.Body);
+        var pageSchema = _jsYaml2['default'].load(yamlString);
 
         return _rsvp2['default'].hash({
           pageSchema: pageSchema,
@@ -66,6 +81,17 @@ var YAMLContext = (function () {
         var context = {};
 
         context = _lodash2['default'].assign(context, hash.pageSchema.site);
+
+        context.categories = _lodash2['default'].map(hash.pageSchema.categories, function (value, key) {
+          // TODO: Normalize in other place
+          return {
+            name: key,
+            children: _lodash2['default'].map(value.children, function (value, key) {
+              return value['display-name'] || key;
+            }) || []
+          };
+        });
+
         context = _lodash2['default'].assign(context, hash.categoryContext);
         context = _lodash2['default'].assign(context, hash.pageContext);
 
