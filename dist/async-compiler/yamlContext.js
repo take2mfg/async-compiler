@@ -30,6 +30,10 @@ var _yamlContextAdapters = require('./yamlContext/adapters');
 
 var _yamlContextAdapters2 = _interopRequireDefault(_yamlContextAdapters);
 
+var _yamlContextSerializers = require('./yamlContext/serializers');
+
+var _yamlContextSerializers2 = _interopRequireDefault(_yamlContextSerializers);
+
 function YAMLContextException(message) {
   this.message = message;
   this.name = 'YAMLContextException';
@@ -41,6 +45,7 @@ var YAMLContext = (function () {
 
     this._compiler = options.compiler;
     this.adapters = options.adapters || _yamlContextAdapters2['default'].setupDefaultAdapters({ request: options.request });
+    this.serializers = options.serializers || _yamlContextSerializers2['default'].setupDefaultSerializers({ request: options.request });
   }
 
   _createClass(YAMLContext, [{
@@ -88,6 +93,8 @@ var YAMLContext = (function () {
       var adapterPromises = _lodash2['default'].map(pageDefinitionInPages.needs, function (options, key) {
         var adapterName = options.adapter;
         var adapter = _this2.getAdapterFor(adapterName);
+        var serializer = _this2.getSerializerFor(adapterName);
+
         if (!adapter) {
           throw new YAMLContextException('No adapter found for ' + adapterName);
         }
@@ -95,7 +102,11 @@ var YAMLContext = (function () {
         // include definition key in options
         options._key = key;
 
-        return adapter.fetch(options);
+        return adapter.fetch(options).then(function (_ref) {
+          var response = _ref.response;
+          var options = _ref.options;
+          return serializer.normalize(response, options);
+        });
       });
 
       // call all adapters in parallel
@@ -106,10 +117,17 @@ var YAMLContext = (function () {
     }
   }, {
     key: 'getAdapterFor',
-    value: function getAdapterFor(adapterName) {
+    value: function getAdapterFor(typeName) {
       return _lodash2['default'].find(this.adapters, function (v, k) {
-        return k === adapterName;
+        return k === typeName;
       });
+    }
+  }, {
+    key: 'getSerializerFor',
+    value: function getSerializerFor(typeName) {
+      return _lodash2['default'].find(this.serializers, function (v, k) {
+        return k === typeName;
+      }) || this.serializers.base;
     }
   }, {
     key: 'getCategoryContext',
@@ -130,6 +148,7 @@ var YAMLContext = (function () {
       }
 
       var adapter = this.getAdapterFor('take2');
+      var serializer = this.getSerializerFor('productTemplateGroup');
 
       // TODO: improve take2 adapter api so this doesn't have to be manual
       var options = categoryDefinitionInPages;
@@ -138,7 +157,11 @@ var YAMLContext = (function () {
       options.slug = categoryDefinitionInPages['template-group-slug'];
       options.type = 'productTemplatePairs';
 
-      return adapter.fetch(options).then(function (category) {
+      return adapter.fetch(options).then(function (_ref2) {
+        var response = _ref2.response;
+        var options = _ref2.options;
+        return serializer.normalize(response, options);
+      }).then(function (category) {
         var context = {
           category: categoryDefinitionInPages
         };

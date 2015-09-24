@@ -14,41 +14,74 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var _baseAdapterJs = require('./base-adapter.js');
+var _lodash = require('lodash');
 
-var _baseAdapterJs2 = _interopRequireDefault(_baseAdapterJs);
+var _lodash2 = _interopRequireDefault(_lodash);
 
-var _default = (function (_BaseAdapter) {
-  _inherits(_default, _BaseAdapter);
+var _baseSerializer = require('./base-serializer');
 
-  function _default(options) {
+var _baseSerializer2 = _interopRequireDefault(_baseSerializer);
+
+var _default = (function (_BaseSerializer) {
+  _inherits(_default, _BaseSerializer);
+
+  function _default() {
     _classCallCheck(this, _default);
 
-    _get(Object.getPrototypeOf(_default.prototype), 'constructor', this).call(this, options);
-    this.request = options.request;
-    this.REQUIRED_OPTIONS.push('path');
+    _get(Object.getPrototypeOf(_default.prototype), 'constructor', this).call(this);
   }
 
   _createClass(_default, [{
-    key: 'configureRequest',
-    value: function configureRequest(options) {
-      return this.request.get(options.path);
-    }
-  }, {
-    key: 'fetch',
-    value: function fetch(options) {
-      var _this = this;
+    key: 'normalize',
+    value: function normalize(response, options) {
+      function findInRelationships(response, type, id) {
+        return _lodash2['default'].find(response.included, function (item) {
+          return item.type === type && '' + item.id === '' + id;
+        });
+      }
 
-      return this.validateOptions(options).then(function () {
-        return _this.configureRequest(options);
-      }).then(function (res) {
-        return { options: options, response: res.body };
-      });
+      function nestDataItems(response) {
+
+        if (!response.data) {
+          // No JSON API? return as is
+          return response;
+        }
+
+        return _lodash2['default'].map(response.data, function (item) {
+          var relationships = item.relationships;
+
+          delete item.relationships;
+
+          _lodash2['default'].forEach(relationships, function (value, key) {
+            var relatedItem = findInRelationships(response, value.data.type, value.data.id);
+
+            if (relatedItem) {
+              item[key] = relatedItem;
+            }
+          });
+
+          return item;
+        });
+      }
+
+      var nestedItems = nestDataItems(response);
+
+      var context = {};
+      if (options) {
+        context[options._key] = {
+          path: options.path,
+          response: nestedItems
+        };
+      } else {
+        context = nestedItems;
+      }
+
+      return context;
     }
   }]);
 
   return _default;
-})(_baseAdapterJs2['default']);
+})(_baseSerializer2['default']);
 
 exports['default'] = _default;
 module.exports = exports['default'];

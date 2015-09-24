@@ -9,7 +9,7 @@ site:
 
 # pages names match hbs files
 pages:
-  home:
+  index:
     needs:
       # use adapters to fetch data from services
       # adapters are called by name (take2 for example) and they receive the attributes
@@ -36,7 +36,7 @@ pages:
       #   adapter: stripe
 
   freeway-signs:
-    needs:      
+    needs:
       # default behavior of categories
       # this happens under the covers for default category pages
       #
