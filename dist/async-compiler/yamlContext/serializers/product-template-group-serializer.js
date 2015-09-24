@@ -18,70 +18,62 @@ var _lodash = require('lodash');
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
-var _baseSerializer = require('./base-serializer');
+var _take2Serializer = require('./take2-serializer');
 
-var _baseSerializer2 = _interopRequireDefault(_baseSerializer);
+var _take2Serializer2 = _interopRequireDefault(_take2Serializer);
 
-var _default = (function (_BaseSerializer) {
-  _inherits(_default, _BaseSerializer);
+var _default = (function (_Take2Serializer) {
+  _inherits(_default, _Take2Serializer);
 
   function _default() {
     _classCallCheck(this, _default);
 
-    _get(Object.getPrototypeOf(_default.prototype), 'constructor', this).call(this);
+    _get(Object.getPrototypeOf(_default.prototype), 'constructor', this).apply(this, arguments);
   }
 
   _createClass(_default, [{
     key: 'normalize',
     value: function normalize(response, options) {
-      function findInRelationships(response, type, id) {
-        return _lodash2['default'].find(response.included, function (item) {
-          return item.type === type && '' + item.id === '' + id;
+      var nestedItems = this.nestDataItems(response);
+      return _get(Object.getPrototypeOf(_default.prototype), 'normalize', this).call(this, nestedItems, options);
+    }
+  }, {
+    key: 'nestDataItems',
+    value: function nestDataItems(response) {
+      var _this = this;
+
+      if (!response.data) {
+        // No JSON API? return as is
+        return response;
+      }
+
+      return _lodash2['default'].map(response.data, function (item) {
+        var relationships = item.relationships;
+
+        delete item.relationships;
+
+        _lodash2['default'].forEach(relationships, function (value, key) {
+          var relatedItem = _this.findInRelationships(response, value.data.type, value.data.id);
+
+          if (relatedItem) {
+            item[key] = relatedItem;
+          }
         });
-      }
 
-      function nestDataItems(response) {
-
-        if (!response.data) {
-          // No JSON API? return as is
-          return response;
-        }
-
-        return _lodash2['default'].map(response.data, function (item) {
-          var relationships = item.relationships;
-
-          delete item.relationships;
-
-          _lodash2['default'].forEach(relationships, function (value, key) {
-            var relatedItem = findInRelationships(response, value.data.type, value.data.id);
-
-            if (relatedItem) {
-              item[key] = relatedItem;
-            }
-          });
-
-          return item;
-        });
-      }
-
-      var nestedItems = nestDataItems(response);
-
-      var context = {};
-      if (options) {
-        context[options._key] = {
-          path: options.path,
-          response: nestedItems
-        };
-      } else {
-        context = nestedItems;
-      }
-
-      return context;
+        return item;
+      });
+    }
+  }, {
+    key: 'findInRelationships',
+    value: function findInRelationships(response, type, id) {
+      return _lodash2['default'].find(response.included, function (item) {
+        return item.type === type && '' + item.id === '' + id;
+      });
     }
   }]);
 
   return _default;
-})(_baseSerializer2['default']);
+})(_take2Serializer2['default']);
 
 exports['default'] = _default;
 module.exports = exports['default'];
