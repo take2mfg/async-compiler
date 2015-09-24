@@ -14,41 +14,66 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var _baseAdapterJs = require('./base-adapter.js');
+var _lodash = require('lodash');
 
-var _baseAdapterJs2 = _interopRequireDefault(_baseAdapterJs);
+var _lodash2 = _interopRequireDefault(_lodash);
 
-var _default = (function (_BaseAdapter) {
-  _inherits(_default, _BaseAdapter);
+var _take2Serializer = require('./take2-serializer');
 
-  function _default(options) {
+var _take2Serializer2 = _interopRequireDefault(_take2Serializer);
+
+var _default = (function (_Take2Serializer) {
+  _inherits(_default, _Take2Serializer);
+
+  function _default() {
     _classCallCheck(this, _default);
 
-    _get(Object.getPrototypeOf(_default.prototype), 'constructor', this).call(this, options);
-    this.request = options.request;
-    this.REQUIRED_OPTIONS.push('path');
+    _get(Object.getPrototypeOf(_default.prototype), 'constructor', this).apply(this, arguments);
   }
 
   _createClass(_default, [{
-    key: 'configureRequest',
-    value: function configureRequest(options) {
-      return this.request.get(options.path);
+    key: 'normalize',
+    value: function normalize(response, options) {
+      var nestedItems = this.nestDataItems(response);
+      return _get(Object.getPrototypeOf(_default.prototype), 'normalize', this).call(this, nestedItems, options);
     }
   }, {
-    key: 'fetch',
-    value: function fetch(options) {
+    key: 'nestDataItems',
+    value: function nestDataItems(response) {
       var _this = this;
 
-      return this.validateOptions(options).then(function () {
-        return _this.configureRequest(options);
-      }).then(function (res) {
-        return { options: options, response: res.body };
+      if (!response.data) {
+        // No JSON API? return as is
+        return response;
+      }
+
+      return _lodash2['default'].map(response.data, function (item) {
+        var relationships = item.relationships;
+
+        delete item.relationships;
+
+        _lodash2['default'].forEach(relationships, function (value, key) {
+          var relatedItem = _this.findInRelationships(response, value.data.type, value.data.id);
+
+          if (relatedItem) {
+            item[key] = relatedItem;
+          }
+        });
+
+        return item;
+      });
+    }
+  }, {
+    key: 'findInRelationships',
+    value: function findInRelationships(response, type, id) {
+      return _lodash2['default'].find(response.included, function (item) {
+        return item.type === type && '' + item.id === '' + id;
       });
     }
   }]);
 
   return _default;
-})(_baseAdapterJs2['default']);
+})(_take2Serializer2['default']);
 
 exports['default'] = _default;
 module.exports = exports['default'];

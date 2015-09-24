@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import nock from 'nock';
 
-import URLAdapter from '../../lib/async-compiler/yamlContext/adapters/url-adapter';
+import URLAdapter from '../../../lib/async-compiler/yamlContext/adapters/url-adapter';
 
 
 let request = require('superagent-promise')(require('superagent'), Promise);
@@ -45,10 +45,8 @@ describe('URLAdapter', () => {
     return adapter.fetch(options)
       .then(res => {
         expect(res).to.deep.equal({
-          'my-fetch': {
-            response,
-            path: urlHost + urlPath
-          }
+          options,
+          response
         });
       });
   });

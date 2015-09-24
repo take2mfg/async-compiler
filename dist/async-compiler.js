@@ -41,7 +41,7 @@ var AsyncCompiler = (function () {
       s3AccessKey: '',
       defaultBucket: '',
 
-      baseFolder: '',
+      baseFolder: null,
 
       yamlFileName: 'index.yaml',
 
@@ -72,8 +72,6 @@ var AsyncCompiler = (function () {
   _createClass(AsyncCompiler, [{
     key: 'fetchFromS3',
     value: function fetchFromS3(key) {
-      var _this = this;
-
       var bucket = arguments.length <= 1 || arguments[1] === undefined ? this._bucket : arguments[1];
 
       var s3 = new _awsSdk2['default'].S3({
@@ -81,10 +79,12 @@ var AsyncCompiler = (function () {
         secretAccessKey: this.S3_SECRET_ACCESS_KEY
       });
 
+      var filePath = this.baseFolder ? this.baseFolder + '/' + key : '' + key;
+
       return new Promise(function (resolve, reject) {
         s3.getObject({
           Bucket: bucket,
-          Key: _this.baseFolder + '/' + key
+          Key: filePath
         }, function (err, data) {
           if (err) {
             return reject(err);

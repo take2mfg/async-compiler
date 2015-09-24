@@ -57,7 +57,7 @@ const freewaySignsHBS = `
   <body>
     
     <p class="template-in-category-name">
-      {{category.response.included.0.attributes.name}}
+      {{category.response.0.template.attributes.name}}
     </p>
 
     <p class="my-featured-product-name">
@@ -94,7 +94,7 @@ describe('Context and template merging', () => {
     });
 
     nock('https://test-default-bucket.s3.amazonaws.com:443')
-      .get('/home.hbs')
+      .get('/index.hbs')
       .reply(200, baseHBS);
 
     const baseYAML = fs.readFileSync(baseYAMLDir + `/basic.yaml`, 'utf8');
@@ -116,7 +116,7 @@ describe('Context and template merging', () => {
       .get('/pulls?user=myuser')
       .reply(200, { pulls: ['some pull'] });
 
-    return compiler.fetchCompileAndMerge('home')
+    return compiler.fetchCompileAndMerge('index')
       .then(renderedPage => {
         const $ = cheerio.load(renderedPage);
         
