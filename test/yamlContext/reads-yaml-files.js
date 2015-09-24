@@ -56,7 +56,7 @@ describe('YAML context', () => {
         .get('/pulls?user=myuser')
         .reply(200, githubResponse);
 
-      return compiler.yamlContext.getYAMLContextFor('home')
+      return compiler.yamlContext.getYAMLContextFor('index')
         .then(context => {
           expect(context).to.deep.equal({
             title: 'FastBannerSigns.com',

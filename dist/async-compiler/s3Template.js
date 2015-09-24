@@ -56,7 +56,7 @@ _handlebars2['default'].registerHelper('json', function (context) {
 });
 
 _handlebars2['default'].registerHelper('log', function (context) {
-  return console.log(context.category);
+  return console.log(context);
 });
 
 var S3Template = (function () {
