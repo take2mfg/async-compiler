@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import nock from 'nock';
 
-import URLAdapter from '../../../lib/async-compiler/yamlContext/adapters/url-adapter';
+import URLAdapter from '../../lib/async-compiler/adapters/url-adapter';
 
 
 let request = require('superagent-promise')(require('superagent'), Promise);

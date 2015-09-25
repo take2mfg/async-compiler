@@ -2,10 +2,10 @@ import { expect } from 'chai';
 import fs from 'fs';
 import cheerio from 'cheerio';
 
-import { getSpyableCompiler } from '../testUtils';
+import { getSpyableCompiler } from './support/test_utils';
 
 
-const baseDir = './test/s3Template/fixtures';
+const baseDir = './test/fixtures';
 
 
 function getCompilerWithFixture(fixtureName) {
@@ -23,7 +23,7 @@ function getCompilerWithFixture(fixtureName) {
 describe('S3Template', () => {
 
   it('fetches home, compiles it and adds the right context', () => {
-    let compiler = getCompilerWithFixture('base.hbs');
+    let compiler = getCompilerWithFixture('base_template.hbs');
 
     return compiler.s3Template.fetchTemplateFor('home')
       .then(template => {

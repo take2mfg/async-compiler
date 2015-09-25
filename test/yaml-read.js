@@ -2,12 +2,12 @@ import { expect } from 'chai';
 import fs from 'fs';
 import nock from 'nock';
 
-import { getSpyableCompiler } from '../testUtils';
-import { take2ApiHost, take2PublicKey } from '../../lib/async-compiler/yamlContext/adapters/take2-adapter';
+import { getSpyableCompiler } from './support/test_utils';
+import { take2ApiHost, take2PublicKey } from '../lib/async-compiler/adapters/take2-adapter';
 
 
 
-const baseDir = './test/yamlContext/fixtures';
+const baseDir = './test/fixtures';
 
 
 

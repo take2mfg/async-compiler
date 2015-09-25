@@ -1,4 +1,4 @@
-import BaseSerializer from '../../../lib/async-compiler/yamlContext/serializers/base-serializer';
+import BaseSerializer from '../../lib/async-compiler/serializers/base-serializer';
 import { expect } from 'chai';
 
 

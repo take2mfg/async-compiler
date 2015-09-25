@@ -6,7 +6,7 @@ import cheerio from 'cheerio';
 import Compiler from '../../lib/async-compiler';
 
 
-const baseYAMLDir = './test/yamlContext/fixtures';
+const baseYAMLDir = './test/fixtures';
 
 
 const baseHBS = `

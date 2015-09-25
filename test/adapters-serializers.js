@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import nock from 'nock';
-import AsyncCompiler from '../../lib/async-compiler';
+import AsyncCompiler from '../lib/async-compiler';
 
 
 const yamlFile = `
@@ -50,8 +50,8 @@ describe('YAMLContext Adapter and Serializer', function() {
 
 
   it('for product template groups', function() {
-    const originalFixture = require('./serializers/fixtures/original-product-template-group');
-    const normalizedFixture = require('./serializers/fixtures/normalized-product-template-group');
+    const originalFixture = require('./fixtures/serializers/original-product-template-group');
+    const normalizedFixture = require('./fixtures/serializers/normalized-product-template-group');
     
     nock('https://test-default-bucket.s3.amazonaws.com:443')
       .get('/my-base-folder/app.yaml')
@@ -69,8 +69,8 @@ describe('YAMLContext Adapter and Serializer', function() {
 
 
   it('for index', function() {
-    const originalFixture = require('./serializers/fixtures/original-product-template-group');
-    const normalizedFixture = require('./serializers/fixtures/normalized-product-template-group');
+    const originalFixture = require('./fixtures/serializers/original-product-template-group');
+    const normalizedFixture = require('./fixtures/serializers/normalized-product-template-group');
     
     nock('https://test-default-bucket.s3.amazonaws.com:443')
       .get('/my-base-folder/app.yaml')
