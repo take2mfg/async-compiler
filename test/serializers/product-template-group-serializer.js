@@ -1,4 +1,4 @@
-import ProductTemplateGroupSerializer from '../../../lib/async-compiler/yamlContext/serializers/product-template-group-serializer.js';
+import ProductTemplateGroupSerializer from '../../lib/async-compiler/serializers/product-template-group-serializer.js';
 import { expect } from 'chai';
 
 
@@ -10,8 +10,8 @@ describe('ProductTemplateGroupSerializer', () => {
 
 
   it('nests the json response', () => {
-    const originalFixture = require('./fixtures/original-product-template-group');
-    const normalizedFixture = require('./fixtures/normalized-product-template-group');
+    const originalFixture = require('../fixtures/serializers/original-product-template-group');
+    const normalizedFixture = require('../fixtures/serializers/normalized-product-template-group');
 
     const normalized = serializer.normalize(originalFixture);
     
