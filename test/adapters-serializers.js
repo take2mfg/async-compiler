@@ -26,7 +26,7 @@ categories:
   freeway-signs:
     # TODO: allow also slugs, not ids only
     # template-group-slug: 'fw-signs'
-    template-group-slug: 1
+    group: 1
 `;
 
 
