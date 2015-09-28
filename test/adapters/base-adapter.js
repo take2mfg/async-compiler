@@ -1,4 +1,4 @@
-import BaseAdapter from '../../../lib/async-compiler/yamlContext/adapters/base-adapter';
+import BaseAdapter from '../../lib/async-compiler/adapters/base-adapter';
 
 describe('BaseAdapter', () => {
   let adapter;

@@ -2,12 +2,12 @@ import { expect } from 'chai';
 import fs from 'fs';
 import nock from 'nock';
 
-import { getSpyableCompiler } from '../testUtils';
-import { take2ApiHost, take2PublicKey } from '../../lib/async-compiler/yamlContext/adapters/take2-adapter';
+import { getSpyableCompiler } from './support/test_utils';
+import { take2ApiHost, take2PublicKey } from '../lib/async-compiler/adapters/take2-adapter';
 
 
 
-const baseDir = './test/yamlContext/fixtures';
+const baseDir = './test/fixtures';
 
 
 
@@ -62,6 +62,43 @@ describe('YAML context', () => {
             title: 'FastBannerSigns.com',
             'fb-info': 'Info to show to facebook crawler',
             'twitter-info': 'Info that twitter crawler grabs',
+
+            'categories': [
+              {
+                'key'   : 'parent',
+                'name'  : 'Parent',
+                'slug'  : 'parent-slug',
+                'group' : 'parent-group',
+                'children' : [
+                  {
+                    'key'   : 'child',
+                    'name'  : 'Child',
+                    'slug'  : 'child-slug',
+                    'group' : 'child-group',
+                    'children' : [
+                      {
+                        'key'   : 'child-child',
+                        'name'  : 'child-child',
+                        'slug'  : 'child-child',
+                        'group' : 'child-child'
+                      }
+                    ]
+                  },
+                  {
+                    'key'   : 'child-with-defaults',
+                    'name'  : 'child-with-defaults',
+                    'slug'  : 'child-with-defaults',
+                    'group' : 'child-with-defaults'
+                  }
+                ]
+              },
+              {
+                'key'   : 'freeway-signs',
+                'name'  : 'freeway-signs',
+                'slug'  : 'freeway-signs',
+                'group' : '1'
+              }
+            ],
             
             'featured-banners': {
               path: `${take2ApiHost}/productTemplatePairs`,
@@ -115,14 +152,14 @@ describe('YAML context', () => {
     });
 
 
-    it('gets context needed for large-banners category page, even with no site defined for it', () => {
+    it('gets context needed for "parent" category page, even with no site defined for it', () => {
       const productTemplatePairsResponse = {"freeway-signs":{"path":"http://localhost:5000/api/v1/productTemplatePairs","response":{"data":[{"type":"productTemplatePairs","id":"null-1-null","relationships":{"template":{"data":{"type":"templates","id":"1"}}}}],"included":[{"type":"templates","id":1,"attributes":{"account":1,"ownerUser":null,"name":"My temp","description":null}}]}}};
       nock(take2ApiHost)
-        .get('/productTemplatePairs?filter%5BtemplateGroup%5D=banners-lg&include=template%2Cproduct%2Cface')
+        .get('/productTemplatePairs?filter%5BtemplateGroup%5D=parent-group&include=template%2Cproduct%2Cface')
         .matchHeader('authorization', `bearer ${take2PublicKey}`)
         .reply(200, productTemplatePairsResponse);
 
-      return compiler.yamlContext.getYAMLContextFor('large-banners')
+      return compiler.yamlContext.getYAMLContextFor('parent')
         .then(context => {
           expect(context.title).to.be.equal('FastBannerSigns.com');
           expect(context['fb-info']).to.be.equal('Info to show to facebook crawler');
@@ -148,18 +185,18 @@ describe('YAML context', () => {
     it('gets nested category context', () => {
       const productTemplatePairsResponse = {"freeway-signs":{"path":"http://localhost:5000/api/v1/productTemplatePairs","response":{"data":[{"type":"productTemplatePairs","id":"null-1-null","relationships":{"template":{"data":{"type":"templates","id":"1"}}}}],"included":[{"type":"templates","id":1,"attributes":{"account":1,"ownerUser":null,"name":"My temp","description":null}}]}}};
       nock(take2ApiHost)
-        .get('/productTemplatePairs?filter%5BtemplateGroup%5D=summer-party-banners&include=template%2Cproduct%2Cface')
+        .get('/productTemplatePairs?filter%5BtemplateGroup%5D=child-group&include=template%2Cproduct%2Cface')
         .matchHeader('authorization', `bearer ${take2PublicKey}`)
         .reply(200, productTemplatePairsResponse);
 
-      return compiler.yamlContext.getYAMLContextFor('large-banners/summer-party-banners')
+      return compiler.yamlContext.getYAMLContextFor('parent/child')
         .then(context => {
           expect(context.title).to.be.equal('FastBannerSigns.com');
           expect(context['fb-info']).to.be.equal('Info to show to facebook crawler');
           expect(context['twitter-info']).to.be.equal('Info that twitter crawler grabs');
 
           expect(context.category.response).to.deep.equal(productTemplatePairsResponse);
-          expect(context.category['display-name']).to.be.equal('Awesome party banners!!!');
+          expect(context.category['display-name']).to.be.equal('Child');
         });
     });
     

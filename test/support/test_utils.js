@@ -1,5 +1,5 @@
 import RSVP from 'rsvp';
-import Compiler from '../lib/async-compiler';
+import Compiler from '../../lib/async-compiler';
 
 
 export function getSpyableCompiler() {

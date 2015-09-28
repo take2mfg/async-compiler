@@ -73,20 +73,46 @@ pages:
 # - define parent-children relationships between groups
 # - get default sites using category.hbs
 categories:
-  large-banners:
-    display-name: 'Large banners!!'  # by default is template group name
-    slug: 'large-banners'  # by default is the same of template group, but can be customized
-    template-group-slug: 'banners-lg'
-    children:
-      summer-party-banners: 
-        display-name: 'Awesome party banners!!!'
-        template-group-slug: 'summer-party-banners'
 
-      kids-party-banners: 
-        template-group-slug: 'kids-party-banners'
+  parent:
+    display-name: 'Parent'
+    slug: 'parent-slug'
+    group: 'parent-group'
+    children:
+
+      child:
+        display-name: 'Child'
+        slug: 'child-slug'
+        group: 'child-group'
+        children:
+
+          child-child:
+            group: 'child-child'
+
+      child-with-defaults:
+        group: 'child-with-defaults'
+
+      group-missing:
+        display-name: 'Should not display'
+
+  # large-banners:
+  #   display-name: 'Large Banners'  # by default is template group name
+  #   slug: 'large-banners'  # by default is the name of template group, but can be customized
+  #   group: 'banners-lg' # group is required, but defaults to no display
+  #   children:
+
+  #     summer-party-banners: 
+  #       display-name: 'Awesome party banners!!!'
+  #       slug: 'summer-party-banners'
+  #       group: 'banners-party'
+
+  #     kids-party-banners: 
+  #       group: 'kids-party-banners'
+
+  #     missing-group-banners:
+  #       display-name: 'MISSING'
 
   freeway-signs:
     # TODO: allow also slugs, not ids only
     # template-group-slug: 'fw-signs'
-    template-group-slug: 1
-
+    group: '1'

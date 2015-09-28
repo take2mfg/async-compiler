@@ -16,6 +16,18 @@ var _handlebars = require('handlebars');
 
 var _handlebars2 = _interopRequireDefault(_handlebars);
 
+var _fs = require('fs');
+
+var _fs2 = _interopRequireDefault(_fs);
+
+var _path = require('path');
+
+var _path2 = _interopRequireDefault(_path);
+
+var _rsvp = require('rsvp');
+
+var _rsvp2 = _interopRequireDefault(_rsvp);
+
 // Magic json hightlight
 function syntaxHighlight(json) {
   if (typeof json !== 'string') {
@@ -54,14 +66,23 @@ var S3Template = (function () {
     this.request = options.request;
     this._compiler = options.compiler;
     this.fetchFromS3 = options.fetchFromS3;
+    this.DEV_TEMPLATE_FOLDER = options.DEV_TEMPLATE_FOLDER;
   }
 
   _createClass(S3Template, [{
     key: 'fetchTemplateFor',
     value: function fetchTemplateFor(pageSlug) {
-      return this._compiler.fetchFromS3(pageSlug + '.hbs').then(function (res) {
-        var body = res.Body;
+      var templateFilePromise = undefined;
 
+      if (this.DEV_TEMPLATE_FOLDER) {
+        templateFilePromise = _rsvp2['default'].resolve(_fs2['default'].readFileSync(_path2['default'].join(this.DEV_TEMPLATE_FOLDER, pageSlug + '.hbs'), 'utf8'));
+      } else {
+        templateFilePromise = this._compiler.fetchFromS3(pageSlug + '.hbs').then(function (res) {
+          return res.Body;
+        });
+      }
+
+      return templateFilePromise.then(function (body) {
         if (body instanceof Buffer) {
           body = body.toString('utf8');
         }

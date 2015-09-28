@@ -57,15 +57,21 @@ var AsyncCompiler = (function () {
     this.request = options.request;
     this.baseFolder = options.baseFolder;
 
+    // For development
+    this.DEV_TEMPLATE_FOLDER = options.DEV_TEMPLATE_FOLDER;
+    this.DEV_YAML_FILE = options.DEV_YAML_FILE;
+
     // TODO: find a better way than sending compiler itself
     this.yamlContext = new options.yamlContextClass({
       compiler: this,
-      request: this.request
+      request: this.request,
+      DEV_YAML_FILE: this.DEV_YAML_FILE
     });
 
     this.s3Template = new options.s3TemplateClass({
       compiler: this,
-      request: this.request
+      request: this.request,
+      DEV_TEMPLATE_FOLDER: this.DEV_TEMPLATE_FOLDER
     });
   }
 

@@ -26,17 +26,45 @@ var _rsvp = require('rsvp');
 
 var _rsvp2 = _interopRequireDefault(_rsvp);
 
-var _yamlContextAdapters = require('./yamlContext/adapters');
+var _fs = require('fs');
 
-var _yamlContextAdapters2 = _interopRequireDefault(_yamlContextAdapters);
+var _fs2 = _interopRequireDefault(_fs);
 
-var _yamlContextSerializers = require('./yamlContext/serializers');
+var _adapters = require('./adapters');
 
-var _yamlContextSerializers2 = _interopRequireDefault(_yamlContextSerializers);
+var _adapters2 = _interopRequireDefault(_adapters);
+
+var _serializers = require('./serializers');
+
+var _serializers2 = _interopRequireDefault(_serializers);
 
 function YAMLContextException(message) {
   this.message = message;
   this.name = 'YAMLContextException';
+}
+
+function formatCategories(categoriesHash) {
+  var categories = _lodash2['default'].compact(_lodash2['default'].map(categoriesHash, function (value, key) {
+
+    if (!value.group) {
+      return;
+    }
+
+    var category = {
+      key: key,
+      name: value['display-name'] || key,
+      slug: value['slug'] || key,
+      group: value['group'] || key
+    };
+
+    if (value.children && !_lodash2['default'].isEmpty(value.children)) {
+      category.children = formatCategories(value.children);
+    }
+
+    return category;
+  }));
+
+  return categories;
 }
 
 var YAMLContext = (function () {
@@ -44,8 +72,9 @@ var YAMLContext = (function () {
     _classCallCheck(this, YAMLContext);
 
     this._compiler = options.compiler;
-    this.adapters = options.adapters || _yamlContextAdapters2['default'].setupDefaultAdapters({ request: options.request });
-    this.serializers = options.serializers || _yamlContextSerializers2['default'].setupDefaultSerializers({ request: options.request });
+    this.adapters = options.adapters || _adapters2['default'].setupDefaultAdapters({ request: options.request });
+    this.DEV_YAML_FILE = options.DEV_YAML_FILE;
+    this.serializers = options.serializers || _serializers2['default'].setupDefaultSerializers({ request: options.request });
   }
 
   _createClass(YAMLContext, [{
@@ -53,13 +82,22 @@ var YAMLContext = (function () {
     value: function getYAMLContextFor(pageSlug) {
       var _this = this;
 
-      return this._compiler.fetchFromS3('app.yaml').then(function (data) {
+      var yamlFilePromise = undefined;
+
+      if (this.DEV_YAML_FILE) {
+        yamlFilePromise = _rsvp2['default'].resolve(_fs2['default'].readFileSync(this.DEV_YAML_FILE, 'utf8'));
+      } else {
+        yamlFilePromise = this._compiler.fetchFromS3('app.yaml').then(function (data) {
+          return data.Body;
+        });
+      }
+
+      return yamlFilePromise.then(function (yamlString) {
         // TODO: handle case of YAMLException
-        var pageSchema = _jsYaml2['default'].load(data.Body);
+        var pageSchema = _jsYaml2['default'].load(yamlString);
 
         return _rsvp2['default'].hash({
           pageSchema: pageSchema,
-
           pageContext: _this.getPageContext(pageSchema, pageSlug),
           categoryContext: _this.getCategoryContext(pageSchema, pageSlug)
         });
@@ -71,6 +109,7 @@ var YAMLContext = (function () {
         var context = {};
 
         context = _lodash2['default'].assign(context, hash.pageSchema.site);
+        context.categories = formatCategories(hash.pageSchema.categories);
         context = _lodash2['default'].assign(context, hash.categoryContext);
         context = _lodash2['default'].assign(context, hash.pageContext);
 
@@ -154,7 +193,7 @@ var YAMLContext = (function () {
       var options = categoryDefinitionInPages;
       options._key = pageSlug;
       options.adapter = 'take2';
-      options.slug = categoryDefinitionInPages['template-group-slug'];
+      options.slug = categoryDefinitionInPages['group'];
       options.type = 'productTemplatePairs';
 
       return adapter.fetch(options).then(function (_ref2) {

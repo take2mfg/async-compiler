@@ -1,10 +1,10 @@
 import { expect } from 'chai';
 import fs from 'fs';
 
-import { getSpyableCompiler } from './testUtils';
+import { getSpyableCompiler } from './support/test_utils';
 
 
-const baseDir = './test/yamlContext/fixtures';
+const baseDir = './test/fixtures';
 
 
 describe('S3 fetching mock', () => {
