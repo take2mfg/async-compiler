@@ -72,17 +72,47 @@ var S3Template = (function () {
   _createClass(S3Template, [{
     key: 'fetchTemplateFor',
     value: function fetchTemplateFor(pageSlug) {
-      var templateFilePromise = undefined;
+      var templateKey = undefined,
+          categoryKey = undefined,
+          checkFile = undefined,
+          getTemplate = undefined,
+          getCategoryTemplate = undefined;
 
       if (this.DEV_TEMPLATE_FOLDER) {
-        templateFilePromise = _rsvp2['default'].resolve(_fs2['default'].readFileSync(_path2['default'].join(this.DEV_TEMPLATE_FOLDER, pageSlug + '.hbs'), 'utf8'));
+        templateKey = _path2['default'].join(this.DEV_TEMPLATE_FOLDER, pageSlug + '.hbs');
+        categoryKey = _path2['default'].join(this.DEV_TEMPLATE_FOLDER, 'category.hbs');
+        checkFile = (function () {
+          return this._compiler.checkFile(templateKey);
+        }).bind(this);
+        getCategoryTemplate = (function () {
+          return _rsvp2['default'].resolve(_fs2['default'].readFileSync(categoryKey, 'utf8'));
+        }).bind(this);
+        getTemplate = (function () {
+          return _rsvp2['default'].resolve(_fs2['default'].readFileSync(templateKey, 'utf8'));
+        }).bind(this);
       } else {
-        templateFilePromise = this._compiler.fetchFromS3(pageSlug + '.hbs').then(function (res) {
-          return res.Body;
-        });
+        templateKey = pageSlug + '.hbs';
+        categoryKey = 'category.hbs';
+        checkFile = (function () {
+          return this._compiler.checkFile(templateKey);
+        }).bind(this);
+        getCategoryTemplate = (function () {
+          return this._compiler.fetchFromS3(categoryKey).then(function (res) {
+            return res.Body;
+          });
+        }).bind(this);
+        getTemplate = (function () {
+          return this._compiler.fetchFromS3(templateKey).then(function (res) {
+            return res.Body;
+          });
+        }).bind(this);
       }
 
-      return templateFilePromise.then(function (body) {
+      return checkFile().then(function () {
+        return getTemplate();
+      })['catch'](function () {
+        return getCategoryTemplate();
+      }).then(function (body) {
         if (body instanceof Buffer) {
           body = body.toString('utf8');
         }

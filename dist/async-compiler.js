@@ -10,6 +10,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'd
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
+var _fs = require('fs');
+
+var _fs2 = _interopRequireDefault(_fs);
+
 var _awsSdk = require('aws-sdk');
 
 var _awsSdk2 = _interopRequireDefault(_awsSdk);
@@ -76,6 +80,41 @@ var AsyncCompiler = (function () {
   }
 
   _createClass(AsyncCompiler, [{
+    key: 'checkFile',
+    value: function checkFile(key) {
+      var bucket = arguments.length <= 1 || arguments[1] === undefined ? this._bucket : arguments[1];
+
+      var s3 = new _awsSdk2['default'].S3({
+        accessKeyId: this.S3_KEY_ID,
+        secretAccessKey: this.S3_SECRET_ACCESS_KEY
+      });
+
+      var filePath = this.baseFolder ? this.baseFolder + '/' + key : '' + key;
+
+      if (this.DEV_TEMPLATE_FOLDER) {
+        return new Promise(function (resolve, reject) {
+          _fs2['default'].stat(filePath, function (err, stat) {
+            if (err || !stat.isFile()) {
+              return reject({ error: err || 'Not found' });
+            }
+            return resolve(true);
+          });
+        });
+      } else {
+        return new Promise(function (resolve, reject) {
+          s3.headObject({
+            Bucket: bucket,
+            Key: filePath
+          }, function (err, data) {
+            if (data && data.ContentType && !data.DeleteMarker) {
+              return resolve(true);
+            }
+            return reject('Not found');
+          });
+        });
+      }
+    }
+  }, {
     key: 'fetchFromS3',
     value: function fetchFromS3(key) {
       var bucket = arguments.length <= 1 || arguments[1] === undefined ? this._bucket : arguments[1];

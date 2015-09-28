@@ -180,7 +180,7 @@ var YAMLContext = (function () {
         return pathArray;
       }, _lodash2['default'].slice(pageSlugParts, 0, 1));
 
-      var categoryDefinitionInPages = _lodash2['default'].get(pageSchema.categories, pageSchemePath);
+      var categoryDefinitionInPages = _lodash2['default'].cloneDeep(_lodash2['default'].get(pageSchema.categories, pageSchemePath));
 
       if (!categoryDefinitionInPages) {
         return _rsvp2['default'].resolve();
