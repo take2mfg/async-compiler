@@ -93,7 +93,7 @@ var AsyncCompiler = (function () {
 
       if (this.DEV_TEMPLATE_FOLDER) {
         return new Promise(function (resolve, reject) {
-          _fs2['default'].stat(filePath, function (err, stat) {
+          _fs2['default'].stat(key, function (err, stat) {
             if (err || !stat.isFile()) {
               return reject({ error: err || 'Not found' });
             }
