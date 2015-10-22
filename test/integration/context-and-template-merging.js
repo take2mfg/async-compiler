@@ -8,6 +8,24 @@ import Compiler from '../../lib/async-compiler';
 
 const baseYAMLDir = './test/fixtures';
 
+const notFoundHBS = `
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Page Not Found</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  </head>
+  <body>
+    
+    <h1>Sorry, the page was not found.</h1>
+
+  </body>
+</html>
+`;
 
 const baseHBS = `
 <!DOCTYPE html>
@@ -83,6 +101,37 @@ describe('Context and template merging', () => {
 
   after(() => {
     nock.enableNetConnect();
+  });
+
+  it('renders a 404 template on error', () => {
+    let compiler = new Compiler({
+      s3KeyId: 'test-s3-key-id',
+      s3AccessKey: 'test-s3-access-key',
+      defaultBucket: 'test-default-bucket',
+    });
+
+    const baseYAML = fs.readFileSync(baseYAMLDir + `/basic.yaml`, 'utf8');
+    nock('https://test-default-bucket.s3.amazonaws.com:443')
+      .get('/app.yaml')
+      .reply(200, baseYAML);
+
+    nock('https://test-default-bucket.s3.amazonaws.com:443')
+      .head('/404.hbs')
+      .reply(200, { ContentType: true });
+
+    nock('https://test-default-bucket.s3.amazonaws.com:443')
+      .get('/404.hbs')
+      .reply(200, notFoundHBS);
+
+    return compiler.fetchCompileAndMerge('404')
+      .then(renderedPage => {
+        const $ = cheerio.load(renderedPage);
+        
+        expect($('title').html()).to.be.equal('Page Not Found');
+        expect($('h1').html().trim()).to.be.equal('Sorry, the page was not found.');
+      });
+
+
   });
 
 
