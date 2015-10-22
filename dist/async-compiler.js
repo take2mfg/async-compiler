@@ -143,6 +143,7 @@ var AsyncCompiler = (function () {
     value: function fetchCompileAndMerge(pageSlug) {
       var context = this.yamlContext.getYAMLContextFor(pageSlug);
       var template = this.s3Template.fetchTemplateFor(pageSlug);
+
       return _rsvp2['default'].hash({
         context: context,
         template: template,

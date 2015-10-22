@@ -72,6 +72,32 @@ var S3Template = (function () {
   _createClass(S3Template, [{
     key: 'fetchTemplateFor',
     value: function fetchTemplateFor(pageSlug) {
+      if (pageSlug === '404') {
+        var _fetch = undefined;
+
+        if (this.DEV_TEMPLATE_FOLDER) {
+          _fetch = (function () {
+            return _rsvp2['default'].resolve(_fs2['default'].readFileSync('404.hbs', 'utf8'));
+          }).bind(this);
+        } else {
+          _fetch = (function () {
+            return this._compiler.fetchFromS3('404.hbs').then(function (res) {
+              return res.Body;
+            });
+          }).bind(this);
+        }
+
+        return _fetch().then(function (body) {
+          if (body instanceof Buffer) {
+            body = body.toString('utf8');
+          }
+
+          return S3Template.compile(body);
+        })['catch'](function () {
+          return 'Not found.';
+        });
+      }
+
       var templateKey = undefined,
           categoryKey = undefined,
           checkFile = undefined,

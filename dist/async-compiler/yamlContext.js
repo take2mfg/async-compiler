@@ -82,6 +82,10 @@ var YAMLContext = (function () {
     value: function getYAMLContextFor(pageSlug) {
       var _this = this;
 
+      if (pageSlug === '404') {
+        return _rsvp2['default'].resolve();
+      }
+
       var yamlFilePromise = undefined;
 
       if (this.DEV_YAML_FILE) {
@@ -103,7 +107,7 @@ var YAMLContext = (function () {
         });
       }).then(function (hash) {
         if (_lodash2['default'].isUndefined(hash.pageContext) && _lodash2['default'].isUndefined(hash.categoryContext)) {
-          return _rsvp2['default'].reject('Slug is not present in pages or is a category.');
+          return _rsvp2['default'].reject('Slug is not found in pages or categories.');
         }
 
         var context = {};
