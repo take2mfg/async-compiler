@@ -18,7 +18,7 @@ var _urlAdapterJs = require('./url-adapter.js');
 
 var _urlAdapterJs2 = _interopRequireDefault(_urlAdapterJs);
 
-var take2ApiHost = process.env.TAKE2_API_HOST || 'http://take2-dev.herokuapp.com/api/v1';
+var take2ApiHost = process.env.TAKE2_API_HOST || 'http://take2-loopback.herokuapp.com/api/v1';
 exports.take2ApiHost = take2ApiHost;
 var take2PublicKey = process.env.TAKE2_PUBLIC_KEY || 'pk_somefakekey';
 
@@ -37,12 +37,16 @@ var _default = (function (_URLAdapter) {
     key: 'configureQuery',
     value: function configureQuery(options) {
       var query = {};
-      if (options.type === 'group' || options.type === 'productTemplatePairs') {
-        query.filter = { templateGroup: options.slug };
-        query.include = 'template,product,face';
+      if (options.type === 'customizables') {
+        query.filter = {
+          where: {
+            groupId: options.groupId
+          }
+        };
       } else {
-        query.include = options.include;
-        query.filter = options.filter;
+        query.filter = {
+          where: options.filter
+        };
       }
 
       return query;
@@ -53,7 +57,7 @@ var _default = (function (_URLAdapter) {
       var req = _get(Object.getPrototypeOf(_default.prototype), 'configureRequest', this).call(this, options);
 
       if (take2PublicKey) {
-        req = req.set('Authorization', 'bearer ' + take2PublicKey);
+        req = req.set('Authorization', 'Bearer ' + take2PublicKey);
       }
 
       var query = this.configureQuery(options);
@@ -68,7 +72,7 @@ var _default = (function (_URLAdapter) {
       var apiHost = take2ApiHost;
 
       if (options.type === 'group') {
-        options.path = apiHost + '/productTemplatePairs';
+        options.path = apiHost + '/groups';
       } else {
         options.path = apiHost + ('/' + options.type);
       }

@@ -150,6 +150,9 @@ var AsyncCompiler = (function () {
         pageSlug: pageSlug
       }).then(function (hash) {
         return hash.template(hash.context);
+      })['catch'](function (err) {
+        console.log({ err: err });
+        return _rsvp2['default'].reject(err);
       });
     }
   }]);

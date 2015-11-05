@@ -72,30 +72,40 @@ var S3Template = (function () {
   _createClass(S3Template, [{
     key: 'fetchTemplateFor',
     value: function fetchTemplateFor(pageSlug) {
+      var _this = this;
+
       if (pageSlug === '404') {
-        var _fetch = undefined;
+        var _ret = (function () {
+          var fetch = undefined;
+          var key = '404.hbs';
 
-        if (this.DEV_TEMPLATE_FOLDER) {
-          _fetch = (function () {
-            return _rsvp2['default'].resolve(_fs2['default'].readFileSync('404.hbs', 'utf8'));
-          }).bind(this);
-        } else {
-          _fetch = (function () {
-            return this._compiler.fetchFromS3('404.hbs').then(function (res) {
-              return res.Body;
-            });
-          }).bind(this);
-        }
-
-        return _fetch().then(function (body) {
-          if (body instanceof Buffer) {
-            body = body.toString('utf8');
+          if (_this.DEV_TEMPLATE_FOLDER) {
+            key = _path2['default'].join(_this.DEV_TEMPLATE_FOLDER, key);
+            fetch = (function () {
+              return _rsvp2['default'].resolve(_fs2['default'].readFileSync(key, 'utf8'));
+            }).bind(_this);
+          } else {
+            fetch = (function () {
+              return this._compiler.fetchFromS3(key).then(function (res) {
+                return res.Body;
+              });
+            }).bind(_this);
           }
 
-          return S3Template.compile(body);
-        })['catch'](function () {
-          return 'Not found.';
-        });
+          return {
+            v: fetch().then(function (body) {
+              if (body instanceof Buffer) {
+                body = body.toString('utf8');
+              }
+
+              return S3Template.compile(body);
+            })['catch'](function () {
+              return 'Not found.';
+            })
+          };
+        })();
+
+        if (typeof _ret === 'object') return _ret.v;
       }
 
       var templateKey = undefined,

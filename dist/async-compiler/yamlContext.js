@@ -53,8 +53,8 @@ function formatCategories(categoriesHash) {
     var category = {
       key: key,
       name: value['display-name'] || key,
-      slug: value['slug'] || key,
-      group: value['group'] || key
+      slug: value.slug || key,
+      group: value.group || key
     };
 
     if (value.children && !_lodash2['default'].isEmpty(value.children)) {
@@ -82,10 +82,6 @@ var YAMLContext = (function () {
     value: function getYAMLContextFor(pageSlug) {
       var _this = this;
 
-      if (pageSlug === '404') {
-        return _rsvp2['default'].resolve();
-      }
-
       var yamlFilePromise = undefined;
 
       if (this.DEV_YAML_FILE) {
@@ -106,16 +102,18 @@ var YAMLContext = (function () {
           categoryContext: _this.getCategoryContext(pageSchema, pageSlug)
         });
       }).then(function (hash) {
-        if (_lodash2['default'].isUndefined(hash.pageContext) && _lodash2['default'].isUndefined(hash.categoryContext)) {
-          return _rsvp2['default'].reject('Slug is not found in pages or categories.');
-        }
-
         var context = {};
 
         context = _lodash2['default'].assign(context, hash.pageSchema.site);
         context.categories = formatCategories(hash.pageSchema.categories);
-        context = _lodash2['default'].assign(context, hash.categoryContext);
-        context = _lodash2['default'].assign(context, hash.pageContext);
+
+        if (pageSlug !== '404') {
+          if (_lodash2['default'].isUndefined(hash.pageContext) && _lodash2['default'].isUndefined(hash.categoryContext)) {
+            return _rsvp2['default'].reject('Slug is not found in pages or categories.');
+          }
+          context = _lodash2['default'].assign(context, hash.categoryContext);
+          context = _lodash2['default'].assign(context, hash.pageContext);
+        }
 
         return context;
       });
@@ -197,8 +195,9 @@ var YAMLContext = (function () {
       var options = categoryDefinitionInPages;
       options._key = pageSlug;
       options.adapter = 'take2';
-      options.slug = categoryDefinitionInPages['group'];
-      options.type = 'productTemplatePairs';
+      options.slug = categoryDefinitionInPages.group;
+      options.groupId = categoryDefinitionInPages.groupId;
+      options.type = 'customizables';
 
       return adapter.fetch(options).then(function (_ref2) {
         var response = _ref2.response;
