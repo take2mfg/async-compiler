@@ -30,6 +30,10 @@ var _fs = require('fs');
 
 var _fs2 = _interopRequireDefault(_fs);
 
+var _assert = require('assert');
+
+var _assert2 = _interopRequireDefault(_assert);
+
 var _adapters = require('./adapters');
 
 var _adapters2 = _interopRequireDefault(_adapters);
@@ -142,6 +146,7 @@ var YAMLContext = (function () {
 
         // include definition key in options
         options._key = key;
+        (0, _assert2['default'])(options.type !== 'group', 'Group type is not supported');
 
         return adapter.fetch(options).then(function (_ref) {
           var response = _ref.response;

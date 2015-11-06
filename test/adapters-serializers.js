@@ -18,21 +18,22 @@ pages:
       # This resolved data is merged into the context to be used by the corresponding
       # hbs template file
       'featured-banners':
-        type: 'group'
-        slug: 7
+        type: 'customizables'
+        groupId: 7
         adapter: take2
 
 categories:
   freeway-signs:
     # TODO: allow also slugs, not ids only
     # template-group-slug: 'fw-signs'
-    group: 1
+    groupId: 1
 `;
 
 
 describe('YAMLContext Adapter and Serializer', function() {
   let compiler;
   before(() => {
+    // nock.recorder.rec();
     nock.disableNetConnect();
 
     compiler = new AsyncCompiler({
@@ -49,41 +50,45 @@ describe('YAMLContext Adapter and Serializer', function() {
   });
 
 
-  it('for product template groups', function() {
-    const originalFixture = require('./fixtures/serializers/original-product-template-group');
-    const normalizedFixture = require('./fixtures/serializers/normalized-product-template-group');
+  describe('JSON API', function() {
     
-    nock('https://test-default-bucket.s3.amazonaws.com:443')
-      .get('/my-base-folder/app.yaml')
-      .reply(200, yamlFile);
+    it('for product template groups', function() {
+      const originalFixture = require('./fixtures/serializers/original-product-template-group');
+      const normalizedFixture = require('./fixtures/serializers/normalized-product-template-group');
+      
+      nock('https://test-default-bucket.s3.amazonaws.com:443')
+        .get('/my-base-folder/app.yaml')
+        .reply(200, yamlFile);
 
-    nock('http://take2-dev.herokuapp.com')
-      .get('/api/v1/productTemplatePairs?filter%5BtemplateGroup%5D=1&include=template%2Cproduct%2Cface')
-      .reply(200, originalFixture);
+      nock('http://take2-loopback.herokuapp.com')
+        .get('/api/v1/customizables?filter%5Bwhere%5D%5BgroupId%5D=1')
+        .reply(200, originalFixture);
 
-    return compiler.yamlContext.getYAMLContextFor('freeway-signs')
-      .then(response => {
-        expect(response.category.response).to.deep.equal(normalizedFixture);
-      });
-  });
+      return compiler.yamlContext.getYAMLContextFor('freeway-signs')
+        .then(response => {
+          expect(response.category.response).to.deep.equal(normalizedFixture);
+        });
+    });
 
 
-  it('for index', function() {
-    const originalFixture = require('./fixtures/serializers/original-product-template-group');
-    const normalizedFixture = require('./fixtures/serializers/normalized-product-template-group');
-    
-    nock('https://test-default-bucket.s3.amazonaws.com:443')
-      .get('/my-base-folder/app.yaml')
-      .reply(200, yamlFile);
+    it('for index', function() {
+      const originalFixture = require('./fixtures/serializers/original-product-template-group');
+      const normalizedFixture = require('./fixtures/serializers/normalized-product-template-group');
+      
+      nock('https://test-default-bucket.s3.amazonaws.com:443')
+        .get('/my-base-folder/app.yaml')
+        .reply(200, yamlFile);
 
-    nock('http://take2-dev.herokuapp.com')
-      .get('/api/v1/productTemplatePairs?filter%5BtemplateGroup%5D=7&include=template%2Cproduct%2Cface')
-      .reply(200, originalFixture);
+      nock('http://take2-loopback.herokuapp.com')
+        .get('/api/v1/customizables?filter%5Bwhere%5D%5BgroupId%5D=7')
+        .reply(200, originalFixture);
 
-    return compiler.yamlContext.getYAMLContextFor('index')
-      .then(response => {
-        expect(response['featured-banners'].response).to.deep.equal(normalizedFixture);
-      });
+      return compiler.yamlContext.getYAMLContextFor('index')
+        .then(response => {
+          expect(response['featured-banners'].response).to.deep.equal(normalizedFixture);
+        });
+    });
+
   });
 
 });
