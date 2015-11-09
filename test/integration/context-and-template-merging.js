@@ -123,7 +123,10 @@ describe('Context and template merging', () => {
       .get('/404.hbs')
       .reply(200, notFoundHBS);
 
-    return compiler.fetchCompileAndMerge('404')
+    return compiler.fetchCompileAndMerge({
+        contextKey: '404',
+        templateKey: '404',
+      })
       .then(renderedPage => {
         const $ = cheerio.load(renderedPage);
         
@@ -169,7 +172,10 @@ describe('Context and template merging', () => {
       .get('/pulls?user=myuser')
       .reply(200, { pulls: ['some pull'] });
 
-    return compiler.fetchCompileAndMerge('index')
+    return compiler.fetchCompileAndMerge({
+        contextKey: 'index',
+        templateKey: 'index',
+      })
       .then(renderedPage => {
         const $ = cheerio.load(renderedPage);
         
@@ -215,7 +221,10 @@ describe('Context and template merging', () => {
       .get('/templates/14?include=faces%2Cfaces.designs')
       .reply(200, templateResponse);
 
-    return compiler.fetchCompileAndMerge('freeway-signs')
+    return compiler.fetchCompileAndMerge({
+        contextKey: 'freeway-signs',
+        templateKey: 'freeway-signs',
+      })
       .then(renderedPage => {
         const $ = cheerio.load(renderedPage);
         
@@ -263,7 +272,10 @@ describe('Context and template merging', () => {
       .get('/templates/14?include=faces%2Cfaces.designs')
       .reply(200, templateResponse);
 
-    return compiler.fetchCompileAndMerge('freeway-signs')
+    return compiler.fetchCompileAndMerge({
+        contextKey: 'freeway-signs',
+        templateKey: 'freeway-signs',
+      })
       .then(renderedPage => {
         const $ = cheerio.load(renderedPage);
         
