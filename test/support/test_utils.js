@@ -8,7 +8,7 @@ export function getSpyableCompiler() {
     s3AccessKey    : 'test-s3-access-key',
     defaultBucket  : 'test-default-bucket',
     take2ApiHost   : 'http://take2-loopback.herokuapp.com/api/v1',
-    take2PublicKey : 'pk_somefakekey'
+    take2SecretKey : 'sk_somefakekey'
   });
 
   compiler.FETCHES_FROM_S3 = [];

@@ -109,7 +109,7 @@ describe('Context and template merging', () => {
       s3AccessKey    : 'test-s3-access-key',
       defaultBucket  : 'test-default-bucket',
       take2ApiHost   : 'http://take2-loopback.herokuapp.com/api/v1',
-      take2PublicKey : 'pk_somefakekey'
+      take2SecretKey : 'sk_somefakekey'
     });
 
     const baseYAML = fs.readFileSync(baseYAMLDir + `/basic.yaml`, 'utf8');
@@ -143,7 +143,7 @@ describe('Context and template merging', () => {
       s3AccessKey    : 'test-s3-access-key',
       defaultBucket  : 'test-default-bucket',
       take2ApiHost   : 'http://take2-loopback.herokuapp.com/api/v1',
-      take2PublicKey : 'pk_somefakekey'
+      take2SecretKey : 'sk_somefakekey'
     });
 
     nock('https://test-default-bucket.s3.amazonaws.com:443')
@@ -190,7 +190,7 @@ describe('Context and template merging', () => {
       s3AccessKey    : 'test-s3-access-key',
       defaultBucket  : 'test-default-bucket',
       take2ApiHost   : 'http://take2-loopback.herokuapp.com/api/v1',
-      take2PublicKey : 'pk_somefakekey'
+      take2SecretKey : 'sk_somefakekey'
     });
 
     nock('https://test-default-bucket.s3.amazonaws.com:443')
@@ -239,7 +239,7 @@ describe('Context and template merging', () => {
       s3AccessKey    : 'test-s3-access-key',
       defaultBucket  : 'test-default-bucket',
       take2ApiHost   : 'http://take2-loopback.herokuapp.com/api/v1',
-      take2PublicKey : 'pk_somefakekey'
+      take2SecretKey : 'sk_somefakekey'
     });
 
     nock('https://test-default-bucket.s3.amazonaws.com:443')

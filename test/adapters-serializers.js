@@ -42,7 +42,7 @@ describe('YAMLContext Adapter and Serializer', function() {
       defaultBucket  : 'test-default-bucket',
       baseFolder     : 'my-base-folder',
       take2ApiHost   : 'http://take2-loopback.herokuapp.com/api/v1',
-      take2PublicKey : 'pk_somefakekey'
+      take2SecretKey : 'pk_somefakekey'
     });
   });
 
