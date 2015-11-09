@@ -76,7 +76,13 @@ var YAMLContext = (function () {
     _classCallCheck(this, YAMLContext);
 
     this._compiler = options.compiler;
-    this.adapters = options.adapters || _adapters2['default'].setupDefaultAdapters({ request: options.request });
+
+    var adapter_options = {
+      request: _lodash2['default'].get(options, 'request'),
+      context: _lodash2['default'].get(options, 'context')
+    };
+
+    this.adapters = options.adapters || _adapters2['default'].setupDefaultAdapters(adapter_options);
     this.DEV_YAML_FILE = options.DEV_YAML_FILE;
     this.serializers = options.serializers || _serializers2['default'].setupDefaultSerializers({ request: options.request });
   }

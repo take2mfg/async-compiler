@@ -52,9 +52,11 @@ const specificHBS = `
 
 function getMockCompiler() {
   return new Compiler({
-    s3KeyId       : 'test-s3-key-id',
-    s3AccessKey   : 'test-s3-access-key',
-    defaultBucket : 'test-default-bucket'
+    s3KeyId        : 'test-s3-key-id',
+    s3AccessKey    : 'test-s3-access-key',
+    defaultBucket  : 'test-default-bucket',
+    take2ApiHost   : 'http://take2-loopback.herokuapp.com/api/v1',
+    take2SecretKey : 'sk_somefakekey'
   });
 }
 

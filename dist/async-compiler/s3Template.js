@@ -24,6 +24,10 @@ var _path = require('path');
 
 var _path2 = _interopRequireDefault(_path);
 
+var _assert = require('assert');
+
+var _assert2 = _interopRequireDefault(_assert);
+
 var _rsvp = require('rsvp');
 
 var _rsvp2 = _interopRequireDefault(_rsvp);
@@ -74,6 +78,8 @@ var S3Template = (function () {
     value: function fetchTemplateFor(pageSlug) {
       var _this = this;
 
+      var fallbackTemplateKey = arguments.length <= 1 || arguments[1] === undefined ? 'category' : arguments[1];
+
       if (pageSlug === '404') {
         var _ret = (function () {
           var fetch = undefined;
@@ -109,31 +115,31 @@ var S3Template = (function () {
       }
 
       var templateKey = undefined,
-          categoryKey = undefined,
+          fallbackKey = undefined,
           checkFile = undefined,
           getTemplate = undefined,
-          getCategoryTemplate = undefined;
+          getFallbackTemplate = undefined;
 
       if (this.DEV_TEMPLATE_FOLDER) {
         templateKey = _path2['default'].join(this.DEV_TEMPLATE_FOLDER, pageSlug + '.hbs');
-        categoryKey = _path2['default'].join(this.DEV_TEMPLATE_FOLDER, 'category.hbs');
+        fallbackKey = _path2['default'].join(this.DEV_TEMPLATE_FOLDER, fallbackTemplateKey + '.hbs');
         checkFile = (function () {
           return this._compiler.checkFile(templateKey);
         }).bind(this);
-        getCategoryTemplate = (function () {
-          return _rsvp2['default'].resolve(_fs2['default'].readFileSync(categoryKey, 'utf8'));
+        getFallbackTemplate = (function () {
+          return _rsvp2['default'].resolve(_fs2['default'].readFileSync(fallbackKey, 'utf8'));
         }).bind(this);
         getTemplate = (function () {
           return _rsvp2['default'].resolve(_fs2['default'].readFileSync(templateKey, 'utf8'));
         }).bind(this);
       } else {
         templateKey = pageSlug + '.hbs';
-        categoryKey = 'category.hbs';
+        fallbackKey = fallbackTemplateKey + '.hbs';
         checkFile = (function () {
           return this._compiler.checkFile(templateKey);
         }).bind(this);
-        getCategoryTemplate = (function () {
-          return this._compiler.fetchFromS3(categoryKey).then(function (res) {
+        getFallbackTemplate = (function () {
+          return this._compiler.fetchFromS3(fallbackKey).then(function (res) {
             return res.Body;
           });
         }).bind(this);
@@ -147,7 +153,7 @@ var S3Template = (function () {
       return checkFile().then(function () {
         return getTemplate();
       })['catch'](function () {
-        return getCategoryTemplate();
+        return getFallbackTemplate();
       }).then(function (body) {
         if (body instanceof Buffer) {
           body = body.toString('utf8');

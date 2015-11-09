@@ -14,6 +14,10 @@ var _fs = require('fs');
 
 var _fs2 = _interopRequireDefault(_fs);
 
+var _assert = require('assert');
+
+var _assert2 = _interopRequireDefault(_assert);
+
 var _awsSdk = require('aws-sdk');
 
 var _awsSdk2 = _interopRequireDefault(_awsSdk);
@@ -65,11 +69,19 @@ var AsyncCompiler = (function () {
     this.DEV_TEMPLATE_FOLDER = options.DEV_TEMPLATE_FOLDER;
     this.DEV_YAML_FILE = options.DEV_YAML_FILE;
 
+    var context = {
+      take2: {
+        key: options.take2SecretKey || null,
+        host: options.take2ApiHost || null
+      }
+    };
+
     // TODO: find a better way than sending compiler itself
     this.yamlContext = new options.yamlContextClass({
       compiler: this,
       request: this.request,
-      DEV_YAML_FILE: this.DEV_YAML_FILE
+      DEV_YAML_FILE: this.DEV_YAML_FILE,
+      context: context
     });
 
     this.s3Template = new options.s3TemplateClass({
@@ -140,18 +152,25 @@ var AsyncCompiler = (function () {
     }
   }, {
     key: 'fetchCompileAndMerge',
-    value: function fetchCompileAndMerge(pageSlug) {
-      var context = this.yamlContext.getYAMLContextFor(pageSlug);
-      var template = this.s3Template.fetchTemplateFor(pageSlug);
+    value: function fetchCompileAndMerge(options) {
+      var contextKey = options.contextKey;
+      var templateKey = options.templateKey;
+      var fallbackTemplateKey = options.fallbackTemplateKey;
+
+      (0, _assert2['default'])(contextKey, 'Must send a contextKey.');
+      (0, _assert2['default'])(templateKey, 'Must send a templateKey.');
+
+      var context = this.yamlContext.getYAMLContextFor(contextKey);
+      var template = this.s3Template.fetchTemplateFor(templateKey, fallbackTemplateKey);
 
       return _rsvp2['default'].hash({
         context: context,
-        template: template,
-        pageSlug: pageSlug
+        template: template
       }).then(function (hash) {
         return hash.template(hash.context);
       })['catch'](function (err) {
-        console.log('Error in fetchCompileAndMerge with slug: ' + pageSlug, err);
+        console.log('Error in fetchCompileAndMerge with options:', options);
+        console.log('and error:', err);
         return _rsvp2['default'].reject(err);
       });
     }
