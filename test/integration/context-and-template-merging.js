@@ -105,9 +105,11 @@ describe('Context and template merging', () => {
 
   it('renders a 404 template on error', () => {
     let compiler = new Compiler({
-      s3KeyId: 'test-s3-key-id',
-      s3AccessKey: 'test-s3-access-key',
-      defaultBucket: 'test-default-bucket',
+      s3KeyId        : 'test-s3-key-id',
+      s3AccessKey    : 'test-s3-access-key',
+      defaultBucket  : 'test-default-bucket',
+      take2ApiHost   : 'http://take2-loopback.herokuapp.com/api/v1',
+      take2SecretKey : 'sk_somefakekey'
     });
 
     const baseYAML = fs.readFileSync(baseYAMLDir + `/basic.yaml`, 'utf8');
@@ -137,9 +139,11 @@ describe('Context and template merging', () => {
 
   it('fetchs, renders and merges home', () => {
     let compiler = new Compiler({
-      s3KeyId: 'test-s3-key-id',
-      s3AccessKey: 'test-s3-access-key',
-      defaultBucket: 'test-default-bucket',
+      s3KeyId        : 'test-s3-key-id',
+      s3AccessKey    : 'test-s3-access-key',
+      defaultBucket  : 'test-default-bucket',
+      take2ApiHost   : 'http://take2-loopback.herokuapp.com/api/v1',
+      take2SecretKey : 'sk_somefakekey'
     });
 
     nock('https://test-default-bucket.s3.amazonaws.com:443')
@@ -182,9 +186,11 @@ describe('Context and template merging', () => {
 
   it('fetchs, renders and merges freeway-signs category', function() {
     let compiler = new Compiler({
-      s3KeyId: 'test-s3-key-id',
-      s3AccessKey: 'test-s3-access-key',
-      defaultBucket: 'test-default-bucket',
+      s3KeyId        : 'test-s3-key-id',
+      s3AccessKey    : 'test-s3-access-key',
+      defaultBucket  : 'test-default-bucket',
+      take2ApiHost   : 'http://take2-loopback.herokuapp.com/api/v1',
+      take2SecretKey : 'sk_somefakekey'
     });
 
     nock('https://test-default-bucket.s3.amazonaws.com:443')
@@ -229,9 +235,11 @@ describe('Context and template merging', () => {
 
   it('fetchs, renders and merges freeway-signs category from category.hbs', function() {
     let compiler = new Compiler({
-      s3KeyId       : 'test-s3-key-id',
-      s3AccessKey   : 'test-s3-access-key',
-      defaultBucket : 'test-default-bucket'
+      s3KeyId        : 'test-s3-key-id',
+      s3AccessKey    : 'test-s3-access-key',
+      defaultBucket  : 'test-default-bucket',
+      take2ApiHost   : 'http://take2-loopback.herokuapp.com/api/v1',
+      take2SecretKey : 'sk_somefakekey'
     });
 
     nock('https://test-default-bucket.s3.amazonaws.com:443')

@@ -3,13 +3,11 @@ import fs from 'fs';
 import nock from 'nock';
 
 import { getSpyableCompiler } from './support/test_utils';
-import { take2ApiHost, take2PublicKey } from '../lib/async-compiler/adapters/take2-adapter';
 
-
+const take2ApiHost   = 'http://take2-loopback.herokuapp.com/api/v1';
+const take2SecretKey = 'sk_somefakekey';
 
 const baseDir = './test/fixtures';
-
-
 
 function getCompilerWithFixture(fixtureName) {
   let compiler = getSpyableCompiler();
@@ -48,7 +46,7 @@ describe('YAML context', () => {
       nock(take2ApiHost)
         .get('/customizables?filter%5Bwhere%5D%5BgroupId%5D=3')
         .reply(200, featuredBannersResponse)
-        .matchHeader('authorization', `Bearer ${take2PublicKey}`);
+        .matchHeader('authorization', `Bearer ${take2SecretKey}`);
 
       const featuredSignsResponse = {
         items: ['signs', 'here']
@@ -123,19 +121,19 @@ describe('YAML context', () => {
       const productTemplatePairsResponse = {"freeway-signs":{"path":"http://localhost:5000/api/v1/productTemplatePairs","response":{"data":[{"type":"productTemplatePairs","id":"null-1-null","relationships":{"template":{"data":{"type":"templates","id":"1"}}}}],"included":[{"type":"templates","id":1,"attributes":{"account":1,"ownerUser":null,"name":"My temp","description":null}}]}}};
       nock(take2ApiHost)
         .get('/customizables?filter%5Bwhere%5D%5BgroupId%5D=1')
-        .matchHeader('authorization', `Bearer ${take2PublicKey}`)
+        .matchHeader('authorization', `Bearer ${take2SecretKey}`)
         .reply(200, productTemplatePairsResponse);
 
       const productResponse = { some: 'response', id: 13 };
       nock(take2ApiHost)
         .get('/products/13')
-        .matchHeader('authorization', `Bearer ${take2PublicKey}`)
+        .matchHeader('authorization', `Bearer ${take2SecretKey}`)
         .reply(200, productResponse);
 
       const templateResponse = { some: 'template response', id: 14 };
       nock(take2ApiHost)
         .get('/templates/14?include=faces%2Cfaces.designs')
-        .matchHeader('authorization', `Bearer ${take2PublicKey}`)
+        .matchHeader('authorization', `Bearer ${take2SecretKey}`)
         .reply(200, templateResponse);
 
       return compiler.yamlContext.getYAMLContextFor('freeway-signs')
@@ -158,7 +156,7 @@ describe('YAML context', () => {
       const productTemplatePairsResponse = {"freeway-signs":{"path":"http://localhost:5000/api/v1/productTemplatePairs","response":{"data":[{"type":"productTemplatePairs","id":"null-1-null","relationships":{"template":{"data":{"type":"templates","id":"1"}}}}],"included":[{"type":"templates","id":1,"attributes":{"account":1,"ownerUser":null,"name":"My temp","description":null}}]}}};
       nock(take2ApiHost)
         .get('/customizables?filter%5Bwhere%5D%5BgroupId%5D=37')
-        .matchHeader('authorization', `Bearer ${take2PublicKey}`)
+        .matchHeader('authorization', `Bearer ${take2SecretKey}`)
         .reply(200, productTemplatePairsResponse);
 
       return compiler.yamlContext.getYAMLContextFor('parent')
@@ -188,7 +186,7 @@ describe('YAML context', () => {
       const productTemplatePairsResponse = {"freeway-signs":{"path":"http://localhost:5000/api/v1/productTemplatePairs","response":{"data":[{"type":"productTemplatePairs","id":"null-1-null","relationships":{"template":{"data":{"type":"templates","id":"1"}}}}],"included":[{"type":"templates","id":1,"attributes":{"account":1,"ownerUser":null,"name":"My temp","description":null}}]}}};
       nock(take2ApiHost)
         .get('/customizables?filter%5Bwhere%5D%5BgroupId%5D=47')
-        .matchHeader('authorization', `Bearer ${take2PublicKey}`)
+        .matchHeader('authorization', `Bearer ${take2SecretKey}`)
         .reply(200, productTemplatePairsResponse);
 
       return compiler.yamlContext.getYAMLContextFor('parent/child')
