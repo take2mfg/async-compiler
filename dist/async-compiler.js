@@ -150,6 +150,9 @@ var AsyncCompiler = (function () {
         pageSlug: pageSlug
       }).then(function (hash) {
         return hash.template(hash.context);
+      })['catch'](function (err) {
+        console.log('Error in fetchCompileAndMerge with slug: ' + pageSlug, err);
+        return _rsvp2['default'].reject(err);
       });
     }
   }]);

@@ -25,6 +25,14 @@ function getCompilerWithFixture(fixtureName) {
 
 describe('YAML context', () => {
 
+  before(() => {
+    nock.disableNetConnect();
+  });
+
+  after(() => {
+    nock.enableNetConnect();
+  });
+
   describe('basic yaml file', () => {
     let compiler;
     before(() => {
@@ -36,17 +44,17 @@ describe('YAML context', () => {
       const featuredBannersResponse = {
         items: ['some', 'items', 'here']
       };
+      
       nock(take2ApiHost)
-        .get('/productTemplatePairs?filter%5BtemplateGroup%5D=large-banners&include=template%2Cproduct%2Cface')
-        .matchHeader('authorization', `bearer ${take2PublicKey}`)
-        .reply(200, featuredBannersResponse);
+        .get('/customizables?filter%5Bwhere%5D%5BgroupId%5D=3')
+        .reply(200, featuredBannersResponse)
+        .matchHeader('authorization', `Bearer ${take2PublicKey}`);
 
       const featuredSignsResponse = {
         items: ['signs', 'here']
       };
       nock(take2ApiHost)
-        .get('/productTemplatePairs?filter%5BtemplateGroup%5D=small-signs&include=template%2Cproduct%2Cface')
-        .matchHeader('authorization', `bearer ${take2PublicKey}`)
+        .get('/customizables?filter%5Bwhere%5D%5BgroupId%5D=5')
         .reply(200, featuredSignsResponse);
 
       const githubResponse = {
@@ -67,13 +75,13 @@ describe('YAML context', () => {
               {
                 'key'   : 'parent',
                 'name'  : 'Parent',
-                'slug'  : 'parent-slug',
+                'slug'  : 'parent',
                 'group' : 'parent-group',
                 'children' : [
                   {
                     'key'   : 'child',
                     'name'  : 'Child',
-                    'slug'  : 'child-slug',
+                    'slug'  : 'child',
                     'group' : 'child-group',
                     'children' : [
                       {
@@ -92,20 +100,14 @@ describe('YAML context', () => {
                   }
                 ]
               },
-              {
-                'key'   : 'freeway-signs',
-                'name'  : 'freeway-signs',
-                'slug'  : 'freeway-signs',
-                'group' : '1'
-              }
             ],
             
             'featured-banners': {
-              path: `${take2ApiHost}/productTemplatePairs`,
+              path: `${take2ApiHost}/customizables`,
               response: featuredBannersResponse
             },
             'featured-signs': {
-              path: `${take2ApiHost}/productTemplatePairs`,
+              path: `${take2ApiHost}/customizables`,
               response: featuredSignsResponse
             },
             'pull-requests': {
@@ -120,20 +122,20 @@ describe('YAML context', () => {
     it('gets context needed for freeway signs landing page', () => {
       const productTemplatePairsResponse = {"freeway-signs":{"path":"http://localhost:5000/api/v1/productTemplatePairs","response":{"data":[{"type":"productTemplatePairs","id":"null-1-null","relationships":{"template":{"data":{"type":"templates","id":"1"}}}}],"included":[{"type":"templates","id":1,"attributes":{"account":1,"ownerUser":null,"name":"My temp","description":null}}]}}};
       nock(take2ApiHost)
-        .get('/productTemplatePairs?filter%5BtemplateGroup%5D=1&include=template%2Cproduct%2Cface')
-        .matchHeader('authorization', `bearer ${take2PublicKey}`)
+        .get('/customizables?filter%5Bwhere%5D%5BgroupId%5D=1')
+        .matchHeader('authorization', `Bearer ${take2PublicKey}`)
         .reply(200, productTemplatePairsResponse);
 
       const productResponse = { some: 'response', id: 13 };
       nock(take2ApiHost)
         .get('/products/13')
-        .matchHeader('authorization', `bearer ${take2PublicKey}`)
+        .matchHeader('authorization', `Bearer ${take2PublicKey}`)
         .reply(200, productResponse);
 
       const templateResponse = { some: 'template response', id: 14 };
       nock(take2ApiHost)
         .get('/templates/14?include=faces%2Cfaces.designs')
-        .matchHeader('authorization', `bearer ${take2PublicKey}`)
+        .matchHeader('authorization', `Bearer ${take2PublicKey}`)
         .reply(200, templateResponse);
 
       return compiler.yamlContext.getYAMLContextFor('freeway-signs')
@@ -155,8 +157,8 @@ describe('YAML context', () => {
     it('gets context needed for "parent" category page, even with no site defined for it', () => {
       const productTemplatePairsResponse = {"freeway-signs":{"path":"http://localhost:5000/api/v1/productTemplatePairs","response":{"data":[{"type":"productTemplatePairs","id":"null-1-null","relationships":{"template":{"data":{"type":"templates","id":"1"}}}}],"included":[{"type":"templates","id":1,"attributes":{"account":1,"ownerUser":null,"name":"My temp","description":null}}]}}};
       nock(take2ApiHost)
-        .get('/productTemplatePairs?filter%5BtemplateGroup%5D=parent-group&include=template%2Cproduct%2Cface')
-        .matchHeader('authorization', `bearer ${take2PublicKey}`)
+        .get('/customizables?filter%5Bwhere%5D%5BgroupId%5D=37')
+        .matchHeader('authorization', `Bearer ${take2PublicKey}`)
         .reply(200, productTemplatePairsResponse);
 
       return compiler.yamlContext.getYAMLContextFor('parent')
@@ -185,8 +187,8 @@ describe('YAML context', () => {
     it('gets nested category context', () => {
       const productTemplatePairsResponse = {"freeway-signs":{"path":"http://localhost:5000/api/v1/productTemplatePairs","response":{"data":[{"type":"productTemplatePairs","id":"null-1-null","relationships":{"template":{"data":{"type":"templates","id":"1"}}}}],"included":[{"type":"templates","id":1,"attributes":{"account":1,"ownerUser":null,"name":"My temp","description":null}}]}}};
       nock(take2ApiHost)
-        .get('/productTemplatePairs?filter%5BtemplateGroup%5D=child-group&include=template%2Cproduct%2Cface')
-        .matchHeader('authorization', `bearer ${take2PublicKey}`)
+        .get('/customizables?filter%5Bwhere%5D%5BgroupId%5D=47')
+        .matchHeader('authorization', `Bearer ${take2PublicKey}`)
         .reply(200, productTemplatePairsResponse);
 
       return compiler.yamlContext.getYAMLContextFor('parent/child')

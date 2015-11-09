@@ -2,7 +2,7 @@
   "name": "async-compiler",
   "version": "0.0.1",
   "description": "A compiler that allows you to pull async templates & contexts from the web (or locally) and compile the output to a destination",
-  "main": "lib/async-compiler.js",
+  "main": "dist/async-compiler.js",
   "scripts": {
     "test": "mocha",
     "build": "rm -rf dist && broccoli build dist"
@@ -32,7 +32,7 @@
     "js-yaml": "^3.4.2",
     "lodash": "^3.10.1",
     "rsvp": "^3.1.0",
-    "superagent": "^1.3.0",
+    "superagent": "^1.4.0",
     "superagent-promise": "^1.0.3"
   }
 }

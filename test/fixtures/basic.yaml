@@ -17,13 +17,13 @@ pages:
       # This resolved data is merged into the context to be used by the corresponding
       # hbs template file
       'featured-banners':
-        type: 'group'
-        slug: 'large-banners'
+        type: customizables
+        groupId: 3
         adapter: take2
 
       'featured-signs':
-        type: 'group'
-        slug: 'small-signs'
+        type: customizables
+        groupId: 5
         adapter: take2
 
       'pull-requests':
@@ -41,14 +41,14 @@ pages:
       # this happens under the covers for default category pages
       #
       # take2:
-      #   type: 'group'
+      #   type: customizables
       #   slug: 'fw-signs'
       #   as: 'category-items'
       #   
       # you can override this behavior (not recommended)
       # 
       # take2:
-      #   type: 'group'
+      #   type: customizables
       #   slug: 'some-other-group'
       #   as: 'category-items'
 
@@ -76,13 +76,13 @@ categories:
 
   parent:
     display-name: 'Parent'
-    slug: 'parent-slug'
+    groupId: 37
     group: 'parent-group'
     children:
 
       child:
         display-name: 'Child'
-        slug: 'child-slug'
+        groupId: 47
         group: 'child-group'
         children:
 
@@ -115,4 +115,4 @@ categories:
   freeway-signs:
     # TODO: allow also slugs, not ids only
     # template-group-slug: 'fw-signs'
-    group: '1'
+    groupId: 1
