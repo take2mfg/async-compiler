@@ -65,11 +65,19 @@ var AsyncCompiler = (function () {
     this.DEV_TEMPLATE_FOLDER = options.DEV_TEMPLATE_FOLDER;
     this.DEV_YAML_FILE = options.DEV_YAML_FILE;
 
+    var context = {
+      take2: {
+        key: options.take2SecretKey || null,
+        host: options.take2ApiHost || null
+      }
+    };
+
     // TODO: find a better way than sending compiler itself
     this.yamlContext = new options.yamlContextClass({
       compiler: this,
       request: this.request,
-      DEV_YAML_FILE: this.DEV_YAML_FILE
+      DEV_YAML_FILE: this.DEV_YAML_FILE,
+      context: context
     });
 
     this.s3Template = new options.s3TemplateClass({
@@ -150,9 +158,6 @@ var AsyncCompiler = (function () {
         pageSlug: pageSlug
       }).then(function (hash) {
         return hash.template(hash.context);
-      })['catch'](function (err) {
-        console.log('Error in fetchCompileAndMerge with slug: ' + pageSlug, err);
-        return _rsvp2['default'].reject(err);
       });
     }
   }]);
