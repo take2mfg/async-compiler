@@ -37,10 +37,12 @@ describe('YAMLContext Adapter and Serializer', function() {
     nock.disableNetConnect();
 
     compiler = new AsyncCompiler({
-      s3KeyId: 'test-s3-key-id',
-      s3AccessKey: 'test-s3-access-key',
-      defaultBucket: 'test-default-bucket',
-      baseFolder: 'my-base-folder',
+      s3KeyId        : 'test-s3-key-id',
+      s3AccessKey    : 'test-s3-access-key',
+      defaultBucket  : 'test-default-bucket',
+      baseFolder     : 'my-base-folder',
+      take2ApiHost   : 'http://take2-loopback.herokuapp.com/api/v1',
+      take2PublicKey : 'pk_somefakekey'
     });
   });
 

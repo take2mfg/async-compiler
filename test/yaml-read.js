@@ -3,13 +3,11 @@ import fs from 'fs';
 import nock from 'nock';
 
 import { getSpyableCompiler } from './support/test_utils';
-import { take2ApiHost, take2PublicKey } from '../lib/async-compiler/adapters/take2-adapter';
 
-
+const take2ApiHost   = 'http://take2-loopback.herokuapp.com/api/v1';
+const take2PublicKey = 'pk_somefakekey';
 
 const baseDir = './test/fixtures';
-
-
 
 function getCompilerWithFixture(fixtureName) {
   let compiler = getSpyableCompiler();
