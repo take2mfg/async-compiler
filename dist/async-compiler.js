@@ -14,6 +14,10 @@ var _fs = require('fs');
 
 var _fs2 = _interopRequireDefault(_fs);
 
+var _assert = require('assert');
+
+var _assert2 = _interopRequireDefault(_assert);
+
 var _awsSdk = require('aws-sdk');
 
 var _awsSdk2 = _interopRequireDefault(_awsSdk);
@@ -148,16 +152,26 @@ var AsyncCompiler = (function () {
     }
   }, {
     key: 'fetchCompileAndMerge',
-    value: function fetchCompileAndMerge(pageSlug) {
-      var context = this.yamlContext.getYAMLContextFor(pageSlug);
-      var template = this.s3Template.fetchTemplateFor(pageSlug);
+    value: function fetchCompileAndMerge(options) {
+      var contextKey = options.contextKey;
+      var templateKey = options.templateKey;
+      var fallbackTemplateKey = options.fallbackTemplateKey;
+
+      (0, _assert2['default'])(contextKey, 'Must send a contextKey.');
+      (0, _assert2['default'])(templateKey, 'Must send a templateKey.');
+
+      var context = this.yamlContext.getYAMLContextFor(contextKey);
+      var template = this.s3Template.fetchTemplateFor(templateKey, fallbackTemplateKey);
 
       return _rsvp2['default'].hash({
         context: context,
-        template: template,
-        pageSlug: pageSlug
+        template: template
       }).then(function (hash) {
         return hash.template(hash.context);
+      })['catch'](function (err) {
+        console.log('Error in fetchCompileAndMerge with options:', options);
+        console.log('and error:', err);
+        return _rsvp2['default'].reject(err);
       });
     }
   }]);
