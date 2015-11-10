@@ -51,7 +51,7 @@ function formatCategories(categoriesHash) {
   var categories = _lodash2['default'].compact(_lodash2['default'].map(categoriesHash, function (value, key) {
 
     if (!value.group && !value.groupId) {
-      console.log('Invalid category', key, value);
+      // console.log('Invalid category', key, value);
       return;
     }
 

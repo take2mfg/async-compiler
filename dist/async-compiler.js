@@ -169,8 +169,8 @@ var AsyncCompiler = (function () {
       }).then(function (hash) {
         return hash.template(hash.context);
       })['catch'](function (err) {
-        console.log('Error in fetchCompileAndMerge with options:', options);
-        console.log('and error:', err);
+        // console.log(`Error in fetchCompileAndMerge with options:`, options);
+        // console.log(`and error:`, err);
         return _rsvp2['default'].reject(err);
       });
     }
