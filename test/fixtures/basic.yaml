@@ -77,13 +77,11 @@ categories:
   parent:
     display-name: 'Parent'
     groupId: 37
-    group: 'parent-group'
     children:
 
       child:
         display-name: 'Child'
         groupId: 47
-        group: 'child-group'
         children:
 
           child-child:

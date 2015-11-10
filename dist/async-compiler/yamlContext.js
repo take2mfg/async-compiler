@@ -50,16 +50,24 @@ function YAMLContextException(message) {
 function formatCategories(categoriesHash) {
   var categories = _lodash2['default'].compact(_lodash2['default'].map(categoriesHash, function (value, key) {
 
-    if (!value.group) {
+    if (!value.group && !value.groupId) {
+      console.log('Invalid category', key, value);
       return;
     }
 
     var category = {
       key: key,
       name: value['display-name'] || key,
-      slug: value.slug || key,
-      group: value.group || key
+      slug: value.slug || key
     };
+
+    if (value.groupId) {
+      category.groupId = value.groupId;
+    } else if (value.group) {
+      category.group = value.group;
+    } else {
+      category.group = key;
+    }
 
     if (value.children && !_lodash2['default'].isEmpty(value.children)) {
       category.children = formatCategories(value.children);
