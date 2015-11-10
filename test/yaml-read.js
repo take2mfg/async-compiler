@@ -74,13 +74,13 @@ describe('YAML context', () => {
                 'key'   : 'parent',
                 'name'  : 'Parent',
                 'slug'  : 'parent',
-                'group' : 'parent-group',
+                'groupId' : 37,
                 'children' : [
                   {
                     'key'   : 'child',
                     'name'  : 'Child',
                     'slug'  : 'child',
-                    'group' : 'child-group',
+                    'groupId' : 47,
                     'children' : [
                       {
                         'key'   : 'child-child',
@@ -98,6 +98,12 @@ describe('YAML context', () => {
                   }
                 ]
               },
+              {
+                "groupId": 1,
+                "key": "freeway-signs",
+                "name": "freeway-signs",
+                "slug": "freeway-signs",
+              }
             ],
             
             'featured-banners': {
