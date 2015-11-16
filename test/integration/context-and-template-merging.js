@@ -22,6 +22,7 @@ const notFoundHBS = `
   <body>
     
     <h1>Sorry, the page was not found.</h1>
+    <span class="foo">{{foo}}</span>
 
   </body>
 </html>
@@ -293,6 +294,44 @@ describe('Context and template merging', () => {
         expect($('.my-featured-product-name').html().trim()).to.be.equal(productResponse.product.name);
         expect($('.my-featured-template-with-includes-name').html().trim()).to.be.equal(templateResponse.template.name);
       });
+  });
+
+  it('allows merging in additional context', () => {
+    let compiler = new Compiler({
+      s3KeyId        : 'test-s3-key-id',
+      s3AccessKey    : 'test-s3-access-key',
+      defaultBucket  : 'test-default-bucket',
+      take2ApiHost   : 'http://take2-loopback.herokuapp.com/api/v1',
+      take2SecretKey : 'sk_somefakekey'
+    });
+
+    const baseYAML = fs.readFileSync(baseYAMLDir + `/basic.yaml`, 'utf8');
+    nock('https://test-default-bucket.s3.amazonaws.com:443')
+      .get('/app.yaml')
+      .reply(200, baseYAML);
+
+    nock('https://test-default-bucket.s3.amazonaws.com:443')
+      .head('/404.hbs')
+      .reply(200, { ContentType: true });
+
+    nock('https://test-default-bucket.s3.amazonaws.com:443')
+      .get('/404.hbs')
+      .reply(200, notFoundHBS);
+
+    return compiler.fetchCompileAndMerge({
+        contextKey: '404',
+        templateKey: '404',
+        extras: {
+          foo: 'bar'
+        }
+      })
+      .then(renderedPage => {
+        const $ = cheerio.load(renderedPage);
+        
+        expect($('.foo').html()).to.be.equal('bar');
+      });
+
+
   });
 
 });

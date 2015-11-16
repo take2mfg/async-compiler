@@ -163,11 +163,14 @@ var AsyncCompiler = (function () {
       var context = this.yamlContext.getYAMLContextFor(contextKey);
       var template = this.s3Template.fetchTemplateFor(templateKey, fallbackTemplateKey);
 
+      var extras = options.extras || {};
+
       return _rsvp2['default'].hash({
         context: context,
         template: template
       }).then(function (hash) {
-        return hash.template(hash.context);
+        var full_context = _lodash2['default'].merge(extras, hash.context);
+        return hash.template(full_context);
       })['catch'](function (err) {
         // console.log(`Error in fetchCompileAndMerge with options:`, options);
         // console.log(`and error:`, err);
