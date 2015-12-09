@@ -49,7 +49,7 @@ var _default = (function (_URLAdapter) {
     key: 'configureQuery',
     value: function configureQuery(options) {
       var query = null;
-      if (options.type === 'customizables') {
+      if (options.type === 'sellables') {
         query = query || {};
         query.filter = {
           where: {
