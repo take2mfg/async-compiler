@@ -17,12 +17,12 @@ pages:
       # This resolved data is merged into the context to be used by the corresponding
       # hbs template file
       'featured-banners':
-        type: customizables
+        type: sellables
         groupId: 3
         adapter: take2
 
       'featured-signs':
-        type: customizables
+        type: sellables
         groupId: 5
         adapter: take2
 
@@ -41,14 +41,14 @@ pages:
       # this happens under the covers for default category pages
       #
       # take2:
-      #   type: customizables
+      #   type: sellables
       #   slug: 'fw-signs'
       #   as: 'category-items'
       #   
       # you can override this behavior (not recommended)
       # 
       # take2:
-      #   type: customizables
+      #   type: sellables
       #   slug: 'some-other-group'
       #   as: 'category-items'
 

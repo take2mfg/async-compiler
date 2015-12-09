@@ -16,7 +16,7 @@ pages:
   index:
     needs:
       featured-banners:
-        type: customizables
+        type: sellables
         groupId: 120
         adapter: take2
 
@@ -24,7 +24,7 @@ pages:
 categories:
 
   featured-banners:
-    type: customizables
+    type: sellables
     groupId: 120
     adapter: take2
 
@@ -96,7 +96,7 @@ describe('Categories info from YAML', () => {
       .reply(200, appYAML);
 
     nock('http://take2-loopback.herokuapp.com')
-      .get('/api/v1/customizables?filter%5Bwhere%5D%5BgroupId%5D=120')
+      .get('/api/v1/sellables?filter%5Bwhere%5D%5BgroupId%5D=120')
       .reply(200, {});
 
 

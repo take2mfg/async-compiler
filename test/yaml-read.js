@@ -44,7 +44,7 @@ describe('YAML context', () => {
       };
       
       nock(take2ApiHost)
-        .get('/customizables?filter%5Bwhere%5D%5BgroupId%5D=3')
+        .get('/sellables?filter%5Bwhere%5D%5BgroupId%5D=3')
         .reply(200, featuredBannersResponse)
         .matchHeader('authorization', `Bearer ${take2SecretKey}`);
 
@@ -52,7 +52,7 @@ describe('YAML context', () => {
         items: ['signs', 'here']
       };
       nock(take2ApiHost)
-        .get('/customizables?filter%5Bwhere%5D%5BgroupId%5D=5')
+        .get('/sellables?filter%5Bwhere%5D%5BgroupId%5D=5')
         .reply(200, featuredSignsResponse);
 
       const githubResponse = {
@@ -107,11 +107,11 @@ describe('YAML context', () => {
             ],
             
             'featured-banners': {
-              path: `${take2ApiHost}/customizables`,
+              path: `${take2ApiHost}/sellables`,
               response: featuredBannersResponse
             },
             'featured-signs': {
-              path: `${take2ApiHost}/customizables`,
+              path: `${take2ApiHost}/sellables`,
               response: featuredSignsResponse
             },
             'pull-requests': {
@@ -126,7 +126,7 @@ describe('YAML context', () => {
     it('gets context needed for freeway signs landing page', () => {
       const productTemplatePairsResponse = {"freeway-signs":{"path":"http://localhost:5000/api/v1/productTemplatePairs","response":{"data":[{"type":"productTemplatePairs","id":"null-1-null","relationships":{"template":{"data":{"type":"templates","id":"1"}}}}],"included":[{"type":"templates","id":1,"attributes":{"account":1,"ownerUser":null,"name":"My temp","description":null}}]}}};
       nock(take2ApiHost)
-        .get('/customizables?filter%5Bwhere%5D%5BgroupId%5D=1')
+        .get('/sellables?filter%5Bwhere%5D%5BgroupId%5D=1')
         .matchHeader('authorization', `Bearer ${take2SecretKey}`)
         .reply(200, productTemplatePairsResponse);
 
@@ -161,7 +161,7 @@ describe('YAML context', () => {
     it('gets context needed for "parent" category page, even with no site defined for it', () => {
       const productTemplatePairsResponse = {"freeway-signs":{"path":"http://localhost:5000/api/v1/productTemplatePairs","response":{"data":[{"type":"productTemplatePairs","id":"null-1-null","relationships":{"template":{"data":{"type":"templates","id":"1"}}}}],"included":[{"type":"templates","id":1,"attributes":{"account":1,"ownerUser":null,"name":"My temp","description":null}}]}}};
       nock(take2ApiHost)
-        .get('/customizables?filter%5Bwhere%5D%5BgroupId%5D=37')
+        .get('/sellables?filter%5Bwhere%5D%5BgroupId%5D=37')
         .matchHeader('authorization', `Bearer ${take2SecretKey}`)
         .reply(200, productTemplatePairsResponse);
 
@@ -191,7 +191,7 @@ describe('YAML context', () => {
     it('gets nested category context', () => {
       const productTemplatePairsResponse = {"freeway-signs":{"path":"http://localhost:5000/api/v1/productTemplatePairs","response":{"data":[{"type":"productTemplatePairs","id":"null-1-null","relationships":{"template":{"data":{"type":"templates","id":"1"}}}}],"included":[{"type":"templates","id":1,"attributes":{"account":1,"ownerUser":null,"name":"My temp","description":null}}]}}};
       nock(take2ApiHost)
-        .get('/customizables?filter%5Bwhere%5D%5BgroupId%5D=47')
+        .get('/sellables?filter%5Bwhere%5D%5BgroupId%5D=47')
         .matchHeader('authorization', `Bearer ${take2SecretKey}`)
         .reply(200, productTemplatePairsResponse);
 

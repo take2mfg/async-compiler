@@ -216,7 +216,7 @@ var YAMLContext = (function () {
       options.adapter = 'take2';
       options.slug = categoryDefinitionInPages.group;
       options.groupId = categoryDefinitionInPages.groupId;
-      options.type = 'customizables';
+      options.type = 'sellables';
 
       return adapter.fetch(options).then(function (_ref2) {
         var response = _ref2.response;

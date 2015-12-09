@@ -165,12 +165,12 @@ describe('Context and template merging', () => {
 
     const largeBannerResponse = { product: { description: 'This is my product description' } };
     nock('http://take2-loopback.herokuapp.com/api/v1')
-      .get('/customizables?filter%5Bwhere%5D%5BgroupId%5D=3')
+      .get('/sellables?filter%5Bwhere%5D%5BgroupId%5D=3')
       .reply(200, largeBannerResponse);
 
     const featuredSignsResponse = { product: { description: 'This is my other product' } };
     nock('http://take2-loopback.herokuapp.com/api/v1')
-      .get('/customizables?filter%5Bwhere%5D%5BgroupId%5D=5')
+      .get('/sellables?filter%5Bwhere%5D%5BgroupId%5D=5')
       .reply(200, featuredSignsResponse);
 
     nock('http://api.github.example.com')
@@ -215,7 +215,7 @@ describe('Context and template merging', () => {
 
     const freewaySignsResponse = {"data":[{"type":"productTemplatePairs","id":"null-1-null","relationships":{"template":{"data":{"type":"templates","id":"1"}}}}],"included":[{"type":"templates","id":1,"attributes":{"account":1,"ownerUser":null,"name":"My temp","description":null}}]};
     nock('http://take2-loopback.herokuapp.com/api/v1')
-      .get('/customizables?filter%5Bwhere%5D%5BgroupId%5D=1')
+      .get('/sellables?filter%5Bwhere%5D%5BgroupId%5D=1')
       .reply(200, freewaySignsResponse);
 
     const productResponse = { product: { name: 'My featured product' } };
@@ -268,7 +268,7 @@ describe('Context and template merging', () => {
     const freewaySignsResponse = {"data":[{"type":"productTemplatePairs","id":"null-1-null","relationships":{"template":{"data":{"type":"templates","id":"1"}}}}],"included":[{"type":"templates","id":1,"attributes":{"account":1,"ownerUser":null,"name":"My temp","description":null}}]};
     // const freewaySignsResponse = {};
     nock('http://take2-loopback.herokuapp.com/api/v1')
-      .get('/customizables?filter%5Bwhere%5D%5BgroupId%5D=1')
+      .get('/sellables?filter%5Bwhere%5D%5BgroupId%5D=1')
       .reply(200, freewaySignsResponse);
 
     const productResponse = { product: { name: 'My featured product' } };

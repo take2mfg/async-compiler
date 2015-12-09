@@ -18,7 +18,7 @@ pages:
       # This resolved data is merged into the context to be used by the corresponding
       # hbs template file
       'featured-banners':
-        type: 'customizables'
+        type: 'sellables'
         groupId: 7
         adapter: take2
 
@@ -63,7 +63,7 @@ describe('YAMLContext Adapter and Serializer', function() {
         .reply(200, yamlFile);
 
       nock('http://take2-loopback.herokuapp.com')
-        .get('/api/v1/customizables?filter%5Bwhere%5D%5BgroupId%5D=1')
+        .get('/api/v1/sellables?filter%5Bwhere%5D%5BgroupId%5D=1')
         .reply(200, originalFixture);
 
       return compiler.yamlContext.getYAMLContextFor('freeway-signs')
@@ -82,7 +82,7 @@ describe('YAMLContext Adapter and Serializer', function() {
         .reply(200, yamlFile);
 
       nock('http://take2-loopback.herokuapp.com')
-        .get('/api/v1/customizables?filter%5Bwhere%5D%5BgroupId%5D=7')
+        .get('/api/v1/sellables?filter%5Bwhere%5D%5BgroupId%5D=7')
         .reply(200, originalFixture);
 
       return compiler.yamlContext.getYAMLContextFor('index')
