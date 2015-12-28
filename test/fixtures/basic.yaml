@@ -85,7 +85,8 @@ categories:
         children:
 
           child-child:
-            group: 'child-child'
+            display-name: 'Child Child'
+            groupId: 48
 
       child-with-defaults:
         group: 'child-with-defaults'

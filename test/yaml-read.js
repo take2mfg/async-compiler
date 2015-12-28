@@ -83,10 +83,10 @@ describe('YAML context', () => {
                     'groupId' : 47,
                     'children' : [
                       {
-                        'key'   : 'child-child',
-                        'name'  : 'child-child',
-                        'slug'  : 'child-child',
-                        'group' : 'child-child'
+                        'key'     : 'child-child',
+                        'name'    : 'Child Child',
+                        'slug'    : 'child-child',
+                        'groupId' : 48
                       }
                     ]
                   },
@@ -188,14 +188,19 @@ describe('YAML context', () => {
     });
 
 
-    it('gets nested category context', () => {
+    it('gets nested category context', (done) => {
       const productTemplatePairsResponse = {"freeway-signs":{"path":"http://localhost:5000/api/v1/productTemplatePairs","response":{"data":[{"type":"productTemplatePairs","id":"null-1-null","relationships":{"template":{"data":{"type":"templates","id":"1"}}}}],"included":[{"type":"templates","id":1,"attributes":{"account":1,"ownerUser":null,"name":"My temp","description":null}}]}}};
       nock(take2ApiHost)
         .get('/sellables?filter%5Bwhere%5D%5BgroupId%5D=47')
         .matchHeader('authorization', `Bearer ${take2SecretKey}`)
         .reply(200, productTemplatePairsResponse);
 
-      return compiler.yamlContext.getYAMLContextFor('parent/child')
+      nock(take2ApiHost)
+        .get('/sellables?filter%5Bwhere%5D%5BgroupId%5D=48')
+        .matchHeader('authorization', `Bearer ${take2SecretKey}`)
+        .reply(200, productTemplatePairsResponse);
+
+      compiler.yamlContext.getYAMLContextFor('parent/child')
         .then(context => {
           expect(context.title).to.be.equal('FastBannerSigns.com');
           expect(context['fb-info']).to.be.equal('Info to show to facebook crawler');
@@ -203,7 +208,20 @@ describe('YAML context', () => {
 
           expect(context.category.response).to.deep.equal(productTemplatePairsResponse);
           expect(context.category['display-name']).to.be.equal('Child');
-        });
+
+          return compiler.yamlContext.getYAMLContextFor('parent/child/child-child');
+        })
+        .then(context => {
+          expect(context.title).to.be.equal('FastBannerSigns.com');
+          expect(context['fb-info']).to.be.equal('Info to show to facebook crawler');
+          expect(context['twitter-info']).to.be.equal('Info that twitter crawler grabs');
+
+          expect(context.category.response).to.deep.equal(productTemplatePairsResponse);
+          expect(context.category['display-name']).to.be.equal('Child Child');
+
+          done();
+        })
+        .catch(done);
     });
     
   });
