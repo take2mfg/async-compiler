@@ -69,6 +69,10 @@ function formatCategories(categoriesHash) {
       category.group = key;
     }
 
+    if (value.meta && _lodash2['default'].isObject(value.meta)) {
+      category.meta = value.meta;
+    }
+
     if (value.children && !_lodash2['default'].isEmpty(value.children)) {
       category.children = formatCategories(value.children);
     }
