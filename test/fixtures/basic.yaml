@@ -77,6 +77,9 @@ categories:
   parent:
     display-name: 'Parent'
     groupId: 37
+    meta:
+      foo: 'bar'
+      bar: 'baz'
     children:
 
       child:
@@ -87,6 +90,9 @@ categories:
           child-child:
             display-name: 'Child Child'
             groupId: 48
+            meta:
+              foo: 'bar'
+              bar: 'baz'
 
       child-with-defaults:
         group: 'child-with-defaults'

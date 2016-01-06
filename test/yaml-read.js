@@ -75,6 +75,10 @@ describe('YAML context', () => {
                 'name'  : 'Parent',
                 'slug'  : 'parent',
                 'groupId' : 37,
+                'meta'  : {
+                  'foo' : 'bar',
+                  'bar' : 'baz'
+                },
                 'children' : [
                   {
                     'key'   : 'child',
@@ -86,7 +90,11 @@ describe('YAML context', () => {
                         'key'     : 'child-child',
                         'name'    : 'Child Child',
                         'slug'    : 'child-child',
-                        'groupId' : 48
+                        'groupId' : 48,
+                        'meta'  : {
+                          'foo' : 'bar',
+                          'bar' : 'baz'
+                        }
                       }
                     ]
                   },
