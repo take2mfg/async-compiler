@@ -127,7 +127,9 @@ var YAMLContext = (function () {
           categoryContext: _this.getCategoryContext(pageSchema, pageSlug)
         });
       }).then(function (hash) {
-        var context = {};
+        var context = {
+          currentSlug: pageSlug
+        };
 
         context = _lodash2['default'].assign(context, hash.pageSchema.site);
         context.categories = formatCategories(hash.pageSchema.categories);

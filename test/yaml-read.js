@@ -68,6 +68,7 @@ describe('YAML context', () => {
             title: 'FastBannerSigns.com',
             'fb-info': 'Info to show to facebook crawler',
             'twitter-info': 'Info that twitter crawler grabs',
+            currentSlug: 'index',
 
             'categories': [
               {
