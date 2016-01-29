@@ -174,7 +174,15 @@ describe('YAML context', () => {
     it('gets context needed for "parent" category page, even with no site defined for it', () => {
       const productTemplatePairsResponse = {"freeway-signs":{"path":"http://localhost:5000/api/v1/productTemplatePairs","response":{"data":[{"type":"productTemplatePairs","id":"null-1-null","relationships":{"template":{"data":{"type":"templates","id":"1"}}}}],"included":[{"type":"templates","id":1,"attributes":{"account":1,"ownerUser":null,"name":"My temp","description":null}}]}}};
       nock(take2ApiHost)
-        .get('/sellables?filter%5Bwhere%5D%5BgroupId%5D=37')
+        .get('/sellables')
+        .query({
+          filter: {
+            where: {
+              groupId: 37,
+            },
+          },
+          query: 'cheap parent signs',
+        })
         .matchHeader('authorization', `Bearer ${take2SecretKey}`)
         .reply(200, productTemplatePairsResponse);
 
