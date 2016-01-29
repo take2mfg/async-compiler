@@ -71,9 +71,10 @@ describe('YAML context', () => {
 
             'categories': [
               {
-                'key'   : 'parent',
-                'name'  : 'Parent',
-                'slug'  : 'parent',
+                'key'  : 'parent',
+                'name' : 'Parent',
+                'slug' : 'parent',
+                'url'  : '/parent',
                 'groupId' : 37,
                 'meta'  : {
                   'foo' : 'bar',
@@ -81,15 +82,17 @@ describe('YAML context', () => {
                 },
                 'children' : [
                   {
-                    'key'   : 'child',
-                    'name'  : 'Child',
-                    'slug'  : 'child',
+                    'key'  : 'child',
+                    'name' : 'Child',
+                    'slug' : 'child',
+                    'url'  : '/parent/child',
                     'groupId' : 47,
                     'children' : [
                       {
-                        'key'     : 'child-child',
-                        'name'    : 'Child Child',
-                        'slug'    : 'child-child',
+                        'key'  : 'child-child',
+                        'name' : 'Child Child',
+                        'slug' : 'child-child',
+                        'url'  : '/parent/child/child-child',
                         'groupId' : 48,
                         'meta'  : {
                           'foo' : 'bar',
@@ -102,15 +105,17 @@ describe('YAML context', () => {
                     'key'   : 'child-with-defaults',
                     'name'  : 'child-with-defaults',
                     'slug'  : 'child-with-defaults',
+                    'url'   : '/parent/child-with-defaults',
                     'group' : 'child-with-defaults'
                   }
                 ]
               },
               {
                 "groupId": 1,
-                "key": "freeway-signs",
-                "name": "freeway-signs",
-                "slug": "freeway-signs",
+                "key"  : "freeway-signs",
+                "name" : "freeway-signs",
+                "slug" : "freeway-signs",
+                "url"  : "/freeway-signs",
               }
             ],
             

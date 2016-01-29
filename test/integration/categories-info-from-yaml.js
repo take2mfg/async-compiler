@@ -62,6 +62,12 @@ categories:
         display-name: 'For Sale Banners'
         slug: 'for-sale-banners'
         group: 'banners-for-sale'
+        children:
+
+          large-for-sale-banners:
+            display-name: "Large For Sale Banners"
+            slug: 'large-for-sale-banners'
+            group: 'large-for-sale-banners'
 
   small-banners:
     display-name: "Small Banners"
@@ -107,6 +113,7 @@ describe('Categories info from YAML', () => {
             "key": "featured-banners",
             "name": "featured-banners",
             "slug": "featured-banners",
+            "url": "/featured-banners",
             "groupId": 120
           },
           {
@@ -114,12 +121,14 @@ describe('Categories info from YAML', () => {
             "name": "Magnetics",
             "slug": "magnetic-signs",
             "group": "magnetic-signs",
+            "url": "/magnetic-signs",
             "children": [
               {
                 "key": "lawn-care-magnetic-signs",
                 "name": "Lawn Care Magnetics",
                 "slug": "lawn-care-magnetic-signs",
-                "group": "lawn-care-magnetic-signs"
+                "group": "lawn-care-magnetic-signs",
+                "url": "/magnetic-signs/lawn-care-magnetic-signs"
               }
             ]
           },
@@ -127,31 +136,45 @@ describe('Categories info from YAML', () => {
             "key": "for-sale-signs",
             "name": "For Sale Signs",
             "slug": "for-sale-signs",
+            "url": "/for-sale-signs",
             "groupId": 87
           },
           {
             "key": "for-sale-signs-lb",
             "name": "For Sale Signs In Loopback",
             "slug": "for-sale-signs-lb",
+            "url": "/for-sale-signs-lb",
             "groupId": 120
           },
           {
             "key": "large-banners",
             "name": "Large Banners",
             "slug": "large-banners",
+            "url": "/large-banners",
             "groupId": 120,
             "children": [
               {
                 "key": "party-banners",
                 "name": "Party Banners",
                 "slug": "party-banners",
+                "url": "/large-banners/party-banners",
                 "group": "banners-party"
               },
               {
                 "key": "for-sale-banners",
                 "name": "For Sale Banners",
                 "slug": "for-sale-banners",
-                "group": "banners-for-sale"
+                "url": "/large-banners/for-sale-banners",
+                "group": "banners-for-sale",
+                "children": [
+                  {
+                    "key": "large-for-sale-banners",
+                    "name": "Large For Sale Banners",
+                    "slug": "large-for-sale-banners",
+                    "url": "/large-banners/for-sale-banners/large-for-sale-banners",
+                    "group": "large-for-sale-banners"
+                  }
+                ]
               }
             ]
           },
@@ -159,12 +182,14 @@ describe('Categories info from YAML', () => {
             "key": "small-banners",
             "name": "Small Banners",
             "slug": "small-banners",
+            "url": "/small-banners",
             "group": "banners-sm",
             "children": [
               {
                 "key": "sign-banners",
                 "name": "Sign Banners",
                 "slug": "sign-banners",
+                "url": "/small-banners/sign-banners",
                 "group": "banners-sign"
               }
             ]
