@@ -33,11 +33,12 @@ describe('URLAdapter', () => {
 
 
     let options = {
-      _key: 'my-fetch',
-      adapter: 'take2',
-      'default-query': defaultQuery,
       type,
       groupId,
+      adapter: 'take2',
+      meta: {
+        'default-query': defaultQuery,
+      },
     };
 
     nock(urlHost)

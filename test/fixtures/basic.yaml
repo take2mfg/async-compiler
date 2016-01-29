@@ -77,8 +77,8 @@ categories:
   parent:
     display-name: 'Parent'
     groupId: 37
-    default-query: 'cheap parent signs'
     meta:
+      default-query: 'cheap parent signs'
       foo: 'bar'
       bar: 'baz'
     children:

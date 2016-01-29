@@ -79,7 +79,8 @@ describe('YAML context', () => {
                 'groupId' : 37,
                 'meta'  : {
                   'foo' : 'bar',
-                  'bar' : 'baz'
+                  'bar' : 'baz',
+                  'default-query': 'cheap parent signs'
                 },
                 'children' : [
                   {
