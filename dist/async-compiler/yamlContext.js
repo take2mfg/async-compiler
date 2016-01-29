@@ -47,7 +47,7 @@ function YAMLContextException(message) {
   this.name = 'YAMLContextException';
 }
 
-function formatCategories(categoriesHash) {
+function formatCategories(categoriesHash, parent) {
   var categories = _lodash2['default'].compact(_lodash2['default'].map(categoriesHash, function (value, key) {
 
     if (!value.group && !value.groupId) {
@@ -55,10 +55,13 @@ function formatCategories(categoriesHash) {
       return;
     }
 
+    var slug = value.slug || key;
+
     var category = {
       key: key,
       name: value['display-name'] || key,
-      slug: value.slug || key
+      slug: value.slug || key,
+      url: parent && _lodash2['default'].get(parent, 'url') ? parent.url + '/' + slug : '/' + slug
     };
 
     if (value.groupId) {
@@ -74,7 +77,7 @@ function formatCategories(categoriesHash) {
     }
 
     if (value.children && !_lodash2['default'].isEmpty(value.children)) {
-      category.children = formatCategories(value.children);
+      category.children = formatCategories(value.children, category);
     }
 
     return category;
