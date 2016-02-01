@@ -107,7 +107,10 @@ var YAMLContext = (function () {
     value: function getYAMLContextFor(pageSlug) {
       var _this = this;
 
+      var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+
       var yamlFilePromise = undefined;
+      var queryString = options.queryString;
 
       if (this.DEV_YAML_FILE) {
         yamlFilePromise = _rsvp2['default'].resolve(_fs2['default'].readFileSync(this.DEV_YAML_FILE, 'utf8'));
@@ -123,8 +126,8 @@ var YAMLContext = (function () {
 
         return _rsvp2['default'].hash({
           pageSchema: pageSchema,
-          pageContext: _this.getPageContext(pageSchema, pageSlug),
-          categoryContext: _this.getCategoryContext(pageSchema, pageSlug)
+          pageContext: _this.getPageContext(pageSchema, pageSlug, options),
+          categoryContext: _this.getCategoryContext(pageSchema, pageSlug, options)
         });
       }).then(function (hash) {
         var context = {
@@ -150,6 +153,8 @@ var YAMLContext = (function () {
     value: function getPageContext(pageSchema, pageSlug) {
       var _this2 = this;
 
+      var options = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
+
       var pageSlugParts = pageSlug.split('/');
       var pageDefinitionInPages = _lodash2['default'].get(pageSchema.pages, pageSlugParts);
 
@@ -158,8 +163,8 @@ var YAMLContext = (function () {
       }
 
       // get adapters and start fetching
-      var adapterPromises = _lodash2['default'].map(pageDefinitionInPages.needs, function (options, key) {
-        var adapterName = options.adapter;
+      var adapterPromises = _lodash2['default'].map(pageDefinitionInPages.needs, function (adapterOptions, key) {
+        var adapterName = adapterOptions.adapter;
         var adapter = _this2.getAdapterFor(adapterName);
         var serializer = _this2.getSerializerFor(adapterName);
 
@@ -167,11 +172,12 @@ var YAMLContext = (function () {
           throw new YAMLContextException('No adapter found for ' + adapterName);
         }
 
-        // include definition key in options
-        options._key = key;
-        (0, _assert2['default'])(options.type !== 'group', 'Group type is not supported');
+        // include definition key in adapterOptions
+        adapterOptions._key = key;
+        adapterOptions.options = options;
+        (0, _assert2['default'])(adapterOptions.type !== 'group', 'Group type is not supported');
 
-        return adapter.fetch(options).then(function (_ref) {
+        return adapter.fetch(adapterOptions).then(function (_ref) {
           var response = _ref.response;
           var options = _ref.options;
           return serializer.normalize(response, options);
@@ -201,6 +207,8 @@ var YAMLContext = (function () {
   }, {
     key: 'getCategoryContext',
     value: function getCategoryContext(pageSchema, pageSlug) {
+      var options = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
+
       var pageSlugParts = pageSlug.split('/');
 
       // Add `children` path between slugParts to support children in nested categories
@@ -220,14 +228,15 @@ var YAMLContext = (function () {
       var serializer = this.getSerializerFor('productTemplateGroup');
 
       // TODO: improve take2 adapter api so this doesn't have to be manual
-      var options = categoryDefinitionInPages;
-      options._key = pageSlug;
-      options.adapter = 'take2';
-      options.slug = categoryDefinitionInPages.group;
-      options.groupId = categoryDefinitionInPages.groupId;
-      options.type = 'sellables';
+      var adapterOptions = categoryDefinitionInPages;
+      adapterOptions._key = pageSlug;
+      adapterOptions.adapter = 'take2';
+      adapterOptions.slug = categoryDefinitionInPages.group;
+      adapterOptions.groupId = categoryDefinitionInPages.groupId;
+      adapterOptions.type = 'sellables';
+      adapterOptions.options = options;
 
-      return adapter.fetch(options).then(function (_ref2) {
+      return adapter.fetch(adapterOptions).then(function (_ref2) {
         var response = _ref2.response;
         var options = _ref2.options;
         return serializer.normalize(response, options);

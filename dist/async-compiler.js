@@ -156,11 +156,12 @@ var AsyncCompiler = (function () {
       var contextKey = options.contextKey;
       var templateKey = options.templateKey;
       var fallbackTemplateKey = options.fallbackTemplateKey;
+      var searchQuery = options.searchQuery;
 
       (0, _assert2['default'])(contextKey, 'Must send a contextKey.');
       (0, _assert2['default'])(templateKey, 'Must send a templateKey.');
 
-      var context = this.yamlContext.getYAMLContextFor(contextKey);
+      var context = this.yamlContext.getYAMLContextFor(contextKey, { searchQuery: searchQuery });
       var template = this.s3Template.fetchTemplateFor(templateKey, fallbackTemplateKey);
 
       var extras = options.extras || {};
