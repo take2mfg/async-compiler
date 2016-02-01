@@ -74,10 +74,10 @@ var _default = (function (_URLAdapter) {
         query.include = options.include;
       }
 
-      var queryString = _lodash2['default'].get(options, 'query-string') || _lodash2['default'].get(options, 'meta.default-query');
-      if (queryString) {
+      var searchQuery = _lodash2['default'].get(options, 'options.searchQuery') || _lodash2['default'].get(options, 'meta.default-query');
+      if (searchQuery) {
         query = query || {};
-        query.query = queryString;
+        query.query = searchQuery;
       }
 
       return query;
